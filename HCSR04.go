@@ -1,6 +1,7 @@
 package pidroponics
 
 import (
+	"fmt"
 	"log"
 	"math"
 	"periph.io/x/periph/conn/gpio"
@@ -40,9 +41,7 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 	err = h.EchoPin.In(gpio.PullDown, gpio.BothEdges)
 	if err == nil {
 		go func() {
-			var maxResult, _ = time.ParseDuration("38ms")
-			var unobstructed = maxResult.Microseconds()
-
+			var maxResult, _ = time.ParseDuration("38us")
 			for {
 				// On edge change of the echo...
 				h.EchoPin.WaitForEdge(-1)
@@ -56,8 +55,9 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 				// compute the distance, clear the value.
 				if h.echoStart != nil && h.echoEnd != nil {
 					// compute this down to centimeters
-					var delay = h.echoEnd.Sub(*h.echoEnd).Microseconds();
-					if delay < unobstructed {
+					var delay = h.echoEnd.Sub(*h.echoEnd).Seconds();
+					fmt.Println("Delay: ", delay)
+					if delay < maxResult.Seconds() {
 						h.Distance = float64(delay) / 58
 					} else {
 						// Or if we can't detect things in front of us...
