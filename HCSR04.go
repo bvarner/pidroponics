@@ -59,7 +59,7 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 				// compute the distance, clear the value.
 				if h.echoStart != 0 && h.echoEnd != 0 {
 					// compute this down to centimeters
-					var highTime = h.echoStart - h.echoEnd
+					var highTime = h.echoEnd - h.echoStart
 					fmt.Println("highTime ns: ", highTime)
 					fmt.Println("highTime us: ", highTime/ 1000)
 					fmt.Println("  multplied: ", float64(highTime) * (340 / 2))
