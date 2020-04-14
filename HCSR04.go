@@ -42,6 +42,7 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 	if err == nil {
 		go func() {
 			var maxResult, _ = time.ParseDuration("38us")
+			var maxResultUs = maxResult.Nanoseconds() / 1000
 			for {
 				// On edge change of the echo...
 				h.EchoPin.WaitForEdge(-1)
@@ -55,9 +56,9 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 				// compute the distance, clear the value.
 				if h.echoStart != nil && h.echoEnd != nil {
 					// compute this down to centimeters
-					var delay = h.echoEnd.Sub(*h.echoEnd).Seconds();
-					fmt.Println("Delay: ", delay)
-					if delay < maxResult.Seconds() {
+					var delay = h.echoEnd.Sub(*h.echoEnd).Nanoseconds() / 1000
+					fmt.Println("Delay us: ", delay)
+					if delay < maxResultUs {
 						h.Distance = float64(delay) / 58
 					} else {
 						// Or if we can't detect things in front of us...
