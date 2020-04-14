@@ -37,24 +37,7 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 	// Set the trigger low by default.
 	h.TriggerPin.Out(gpio.Low)
 	// Set the echo up to listen.
-	err = h.EchoPin.In(gpio.PullDown, gpio.RisingEdge)
-	if err == nil {
-		go func() {
-			for {
-				// On edge change of the echo...
-				h.EchoPin.WaitForEdge(-1)
-				var t = time.Now().UnixNano()
-
-				// compute the distance, clear the value.
-				fmt.Println("between start - trigger: ", t, " ", h.triggeredAt)
-				fmt.Println("     ", t - h.triggeredAt)
-				fmt.Println("     /58 = ", (t - h.triggeredAt) / 58);
-				h.triggeredAt = 0
-			}
-		}()
-	} else {
-		log.Print(err);
-	}
+	err = h.EchoPin.In(gpio.PullDown, gpio.BothEdges)
 
 	return h, err;
 }
@@ -63,14 +46,26 @@ func (h *HCSR04) MeasureDistance() (error) {
 	h.Lock()
 	defer h.Unlock()
 
-	var pulse time.Duration = 0
+	var echoStart = int64(0)
+	var echoEnd  = int64(0)
 
-	pulse += 10 * time.Microsecond
 	h.TriggerPin.Out(gpio.Low)
 	h.triggeredAt = time.Now().UnixNano()
 	h.TriggerPin.Out(gpio.High)
-	time.Sleep(pulse)
+	time.Sleep(10 * time.Microsecond)
 	h.TriggerPin.Out(gpio.Low)
+
+	if h.EchoPin.WaitForEdge(-1) {
+		echoStart = time.Now().UnixNano()
+		if h.EchoPin.WaitForEdge(-1) {
+			echoEnd = time.Now().UnixNano()
+		}
+	}
+
+	fmt.Println("triggered: ", h.triggeredAt, " echoStart: ", echoStart, " echoEnd: ", echoEnd)
+	fmt.Println("   pulse duration: ", float64(echoEnd - echoStart));
+
+	h.Distance = float64(echoEnd - echoStart) * 17150;
 
 	return nil
 }

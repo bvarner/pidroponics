@@ -49,6 +49,9 @@ func main() {
 		fmt.Println("Drain Water Level Not Initialized: ", err);
 	}
 
+	fmt.Println("Letting ultrasonics settle...")
+	time.Sleep(2 * time.Second)
+
 	poller := time.NewTicker(1 * time.Second)
 	go func() {
 		for range poller.C {
