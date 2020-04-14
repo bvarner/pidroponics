@@ -65,7 +65,7 @@ func (h *HCSR04) MeasureDistance() (error) {
 	fmt.Println("triggered: ", h.triggeredAt, " echoStart: ", echoStart, " echoEnd: ", echoEnd)
 	fmt.Println("   pulse duration: ", float64(echoEnd - echoStart));
 
-	h.Distance = float64(echoEnd - echoStart) * 17150;
+	h.Distance = (float64(echoEnd - echoStart) * float64(time.Nanosecond) / float64(time.Second)) * 17150
 
 	return nil
 }
