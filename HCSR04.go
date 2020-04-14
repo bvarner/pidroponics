@@ -16,9 +16,8 @@ type HCSR04 struct {
 	EchoPin			gpio.PinIO	`json:"-"`
 
 	sync.Mutex					`json:"-"`
-	triggeredWhen	*time.Time	`json:"-"`
-	echoStart		*time.Time	`json:"-"`
-	echoEnd			*time.Time	`json:"-"`
+	echoStart		int64	`json:"-"`
+	echoEnd			int64 `json:"-"`
 
 	Distance		float64
 }
@@ -33,6 +32,8 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 		TriggerPin: gpioreg.ByName(triggerPinName),
 		EchoPin: gpioreg.ByName(echoPinName),
 		Distance: math.NaN(),
+		echoStart: 0,
+		echoEnd: 0,
 	}
 
 	// Set the trigger low by default.
@@ -41,38 +42,33 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 	err = h.EchoPin.In(gpio.PullDown, gpio.BothEdges)
 	if err == nil {
 		go func() {
-			var maxResultUs = (35 * time.Microsecond).Nanoseconds() / 1000
-			fmt.Println("maxResultUs: ", maxResultUs)
 			for {
 				// On edge change of the echo...
 				h.EchoPin.WaitForEdge(-1)
 				var t = time.Now()
 				fmt.Println("Edge at: ", t.Nanosecond())
-				if h.echoStart == nil {
-					h.echoStart = &t
+				if h.echoStart == 0 {
+					h.echoStart = t.UnixNano()
+					h.echoEnd = 0
 					fmt.Println("  start")
-				} else if h.echoEnd == nil {
-					h.echoEnd = &t
+				} else if h.echoEnd == 0 {
+					h.echoEnd = t.UnixNano()
 					fmt.Println("  end")
 				}
 
 				// compute the distance, clear the value.
-				if h.echoStart != nil && h.echoEnd != nil {
+				if h.echoStart != 0 && h.echoEnd != 0 {
 					// compute this down to centimeters
-					var highTime = h.echoEnd.Sub(*h.echoEnd).Nanoseconds()
-					if highTime < maxResultUs {
-						fmt.Println("highTime ns: ", highTime)
-						fmt.Println("highTime us: ", highTime/ 1000)
-						fmt.Println("  multplied: ", float64(highTime) * (340 / 2))
-						h.Distance = float64(highTime/ 1000) / 58
-					} else {
-						// Or if we can't detect things in front of us...
-						h.Distance = math.NaN()
-					}
+					var highTime = h.echoStart - h.echoEnd
+					fmt.Println("highTime ns: ", highTime)
+					fmt.Println("highTime us: ", highTime/ 1000)
+					fmt.Println("  multplied: ", float64(highTime) * (340 / 2))
+
+					h.Distance = float64(highTime/ 1000) / 58
 
 					// Clear Status
-					h.echoStart = nil;
-					h.echoEnd = nil;
+					h.echoStart = 0;
+					h.echoEnd = 0;
 				}
 			}
 		}()
