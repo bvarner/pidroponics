@@ -17,8 +17,6 @@ type HCSR04 struct {
 
 	sync.Mutex					`json:"-"`
 	triggeredAt		int64 		`json:"-"`
-	echoStart		int64		`json:"-"`
-	echoEnd			int64 		`json:"-"`
 
 	Distance		float64
 }
@@ -34,50 +32,24 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 		EchoPin: gpioreg.ByName(echoPinName),
 		Distance: math.NaN(),
 		triggeredAt: 0,
-		echoStart: 0,
-		echoEnd: 0,
 	}
 
 	// Set the trigger low by default.
 	h.TriggerPin.Out(gpio.Low)
 	// Set the echo up to listen.
-	err = h.EchoPin.In(gpio.PullDown, gpio.BothEdges)
+	err = h.EchoPin.In(gpio.PullDown, gpio.RisingEdge)
 	if err == nil {
 		go func() {
 			for {
 				// On edge change of the echo...
 				h.EchoPin.WaitForEdge(-1)
-				var t = time.Now()
-				if h.echoStart == 0 {
-					h.echoStart = t.UnixNano()
-					h.echoEnd = 0
-				} else if h.echoEnd == 0 {
-					h.echoEnd = t.UnixNano()
-				}
+				var t = time.Now().UnixNano()
 
 				// compute the distance, clear the value.
-				if h.echoStart != 0 && h.echoEnd != 0 {
-					// compute this down to centimeters
-					var highTime = h.echoEnd - h.echoStart
-					fmt.Println("echo end - start: ", h.echoEnd, " ", h.echoStart)
-					fmt.Println("  highTime ns: ", highTime)
-					fmt.Println("  highTime us: ", int64(time.Nanosecond)*highTime/int64(time.Microsecond))
-					fmt.Println("    multplied: ", highTime*340/2)
-					fmt.Println("between start - trigger: ", h.echoStart, " ", h.triggeredAt)
-					fmt.Println("     ", h.echoStart-h.triggeredAt)
-					fmt.Println("     /58 = ", (h.echoStart-h.triggeredAt)/58);
-					fmt.Println("between end - trigger: ", h.echoEnd, " ", h.triggeredAt)
-					fmt.Println("     ", h.echoEnd-h.triggeredAt)
-					fmt.Println("     /58 = ", (h.echoEnd-h.triggeredAt)/58);
-					h.triggeredAt = 0
-				}
-
-				// The first pulse might be a falling edge we didn't trigger for, or we need to clear our state when we've recorded a start and end echo.
-				if h.triggeredAt == 0 {
-					// Clear Status
-					h.echoStart = 0
-					h.echoEnd = 0
-				}
+				fmt.Println("between start - trigger: ", t, " ", h.triggeredAt)
+				fmt.Println("     ", t - h.triggeredAt)
+				fmt.Println("     /58 = ", (t - h.triggeredAt) / 58);
+				h.triggeredAt = 0
 			}
 		}()
 	} else {
