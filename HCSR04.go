@@ -33,6 +33,7 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 		TriggerPin: gpioreg.ByName(triggerPinName),
 		EchoPin: gpioreg.ByName(echoPinName),
 		Distance: math.NaN(),
+		triggeredAt: 0,
 		echoStart: 0,
 		echoEnd: 0,
 	}
@@ -60,19 +61,22 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 					var highTime = h.echoEnd - h.echoStart
 					fmt.Println("echo end - start: ", h.echoEnd, " ", h.echoStart)
 					fmt.Println("  highTime ns: ", highTime)
-					fmt.Println("  highTime us: ", int64(time.Nanosecond) * highTime / int64(time.Microsecond))
-					fmt.Println("    multplied: ", highTime * 340 / 2)
-					fmt.Println("between trigger - start: ", h.triggeredAt, " ", h.echoStart)
-					fmt.Println("     ", h.echoStart - h.triggeredAt)
-					fmt.Println("     /58 = ", (h.echoStart - h.triggeredAt) / 58);
-					fmt.Println("between trigger - end: ", h.triggeredAt, " ", h.echoEnd)
-					fmt.Println("     ", h.echoEnd - h.triggeredAt)
-					fmt.Println("     /58 = ", (h.echoEnd - h.triggeredAt) / 58);
+					fmt.Println("  highTime us: ", int64(time.Nanosecond)*highTime/int64(time.Microsecond))
+					fmt.Println("    multplied: ", highTime*340/2)
+					fmt.Println("between start - trigger: ", h.echoStart, " ", h.triggeredAt)
+					fmt.Println("     ", h.echoStart-h.triggeredAt)
+					fmt.Println("     /58 = ", (h.echoStart-h.triggeredAt)/58);
+					fmt.Println("between end - trigger: ", h.echoEnd, " ", h.triggeredAt)
+					fmt.Println("     ", h.echoEnd-h.triggeredAt)
+					fmt.Println("     /58 = ", (h.echoEnd-h.triggeredAt)/58);
+					h.triggeredAt = 0
+				}
 
+				// The first pulse might be a falling edge we didn't trigger for, or we need to clear our state when we've recorded a start and end echo.
+				if h.triggeredAt == 0 {
 					// Clear Status
 					h.echoStart = 0
 					h.echoEnd = 0
-					h.triggeredAt = 0
 				}
 			}
 		}()
