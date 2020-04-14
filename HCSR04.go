@@ -41,25 +41,30 @@ func NewHCSR04(triggerPinName string, echoPinName string)(*HCSR04, error) {
 	err = h.EchoPin.In(gpio.PullDown, gpio.BothEdges)
 	if err == nil {
 		go func() {
-			var maxResult, _ = time.ParseDuration("38us")
-			var maxResultUs = maxResult.Nanoseconds() / 1000
+			var maxResultUs = (35 * time.Microsecond).Nanoseconds() / 1000
+			fmt.Println("maxResultUs: ", maxResultUs)
 			for {
 				// On edge change of the echo...
 				h.EchoPin.WaitForEdge(-1)
 				var t = time.Now()
+				fmt.Println("Edge at: ", t.Nanosecond())
 				if h.echoStart == nil {
 					h.echoStart = &t
+					fmt.Println("  start")
 				} else if h.echoEnd == nil {
 					h.echoEnd = &t
+					fmt.Println("  end")
 				}
 
 				// compute the distance, clear the value.
 				if h.echoStart != nil && h.echoEnd != nil {
 					// compute this down to centimeters
-					var delay = h.echoEnd.Sub(*h.echoEnd).Nanoseconds() / 1000
-					fmt.Println("Delay us: ", delay)
-					if delay < maxResultUs {
-						h.Distance = float64(delay) / 58
+					var highTime = h.echoEnd.Sub(*h.echoEnd).Nanoseconds()
+					if highTime < maxResultUs {
+						fmt.Println("highTime ns: ", highTime)
+						fmt.Println("highTime us: ", highTime/ 1000)
+						fmt.Println("  multplied: ", float64(highTime) * (340 / 2))
+						h.Distance = float64(highTime/ 1000) / 58
 					} else {
 						// Or if we can't detect things in front of us...
 						h.Distance = math.NaN()
