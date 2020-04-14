@@ -54,8 +54,8 @@ func main() {
 		for range poller.C {
 			inletWaterLevel.MeasureDistance()
 			fmt.Println("Inlet Wather Level: ", inletWaterLevel.Distance)
-			drainWaterLevel.MeasureDistance()
-			fmt.Println("Drain Wather Level: ", drainWaterLevel.Distance)
+//			drainWaterLevel.MeasureDistance()
+//			fmt.Println("Drain Wather Level: ", drainWaterLevel.Distance)
 		}
 	}()
 
