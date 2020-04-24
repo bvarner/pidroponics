@@ -59,7 +59,7 @@ func run() error {
 	for _, file := range files {
 		fmt.Println("    ..." + file.Name())
 		if strings.HasPrefix(file.Name(), "iio:device") {
-			devpath := path.Join("sys", "bus", "iio", "devices", file.Name())
+			devpath := path.Join("/sys/bus/iio/devices", file.Name())
 			devnamepath := path.Join(devpath, "name")
 			fmt.Println("   " + devnamepath)
 			devnamebuf, err := ioutil.ReadFile(devnamepath)
