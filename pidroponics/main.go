@@ -36,8 +36,13 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var err error = nil
+	if err := run(); err != nil {
+		fmt.Fprint(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+}
 
+func run() error {
 	// Setup the SSE Broker.
 	broker = pidroponics.NewBroker()
 	broker.Start()
@@ -47,18 +52,25 @@ func main() {
 	//    srf04
 	//    ads1015
 	files, err := ioutil.ReadDir("/sys/bus/iio/devices")
+	if err != nil {
+		return err
+	}
 	for _, file := range files {
 		if strings.HasPrefix("iio:device", file.Name()) {
 			devnamebuf, err := ioutil.ReadFile(file.Name() + string(filepath.Separator) + "name")
-			if err == nil {
-				fmt.Println("Device: " + file.Name() + " is type: " + string(devnamebuf))
+			if err != nil {
+				return err
 			}
+			fmt.Println("Device: " + file.Name() + " is type: " + string(devnamebuf))
 		}
 	}
 
 	// Enumerate Relay Devices. Setup Those.
 	// /sys/class/leds/relay0/brightness
 	files, err = ioutil.ReadDir("/sys/class/leds")
+	if err != nil {
+		return err
+	}
 	for _, file := range files {
 		if strings.HasPrefix("relay", file.Name()) {
 			fmt.Println("Creating device for: ", file.Name())
@@ -100,4 +112,6 @@ func main() {
 		fmt.Println("SSL Configuration not found.")
 		log.Fatal(http.ListenAndServe(":80", nil))
 	}
+
+	return nil
 }
