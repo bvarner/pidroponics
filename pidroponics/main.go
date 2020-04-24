@@ -5,16 +5,17 @@ import (
 	"fmt"
 	rice "github.com/GeertJohan/go.rice"
 	"github.com/bvarner/pidroponics"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"time"
+	"path/filepath"
+	"strings"
 )
+
+var broker *pidroponics.Broker
+
 var handler http.Handler
-
-var inletWaterLevel *pidroponics.HCSR04
-
-var drainWaterLevel *pidroponics.HCSR04
 
 func redirectTLS(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://" + r.Host + r.RequestURI, http.StatusMovedPermanently)
@@ -37,30 +38,38 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var err error = nil
 
-	inletWaterLevel, err = pidroponics.NewHCSR04("GPIO5", "GPIO6")
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("Inlet Water Level Not Initialized: ", err);
-	}
+	// Setup the SSE Broker.
+	broker = pidroponics.NewBroker()
+	broker.Start()
 
-	drainWaterLevel, err = pidroponics.NewHCSR04("GPIO16", "GPIO17")
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("Drain Water Level Not Initialized: ", err);
-	}
-
-	fmt.Println("Letting ultrasonics settle...")
-	time.Sleep(2 * time.Second)
-
-	poller := time.NewTicker(1 * time.Second)
-	go func() {
-		for range poller.C {
-			inletWaterLevel.MeasureDistance()
-			fmt.Println("Inlet Wather Level: ", inletWaterLevel.Distance)
-//			drainWaterLevel.MeasureDistance()
-//			fmt.Println("Drain Wather Level: ", drainWaterLevel.Distance)
+	// Detect IIO Devices
+	// /sys/bus/iio/devices/iio:devicen/name
+	//    srf04
+	//    ads1015
+	files, err := ioutil.ReadDir("/sys/bus/iio/devices")
+	for _, file := range files {
+		if strings.HasPrefix("iio:device", file.Name()) {
+			devnamebuf, err := ioutil.ReadFile(file.Name() + string(filepath.Separator) + "name")
+			if err == nil {
+				fmt.Println("Device: " + file.Name() + " is type: " + string(devnamebuf))
+			}
 		}
-	}()
+	}
+
+	// Enumerate Relay Devices. Setup Those.
+	// /sys/class/leds/relay0/brightness
+	files, err := ioutil.ReadDir("/sys/class/leds")
+	for _, file := range files {
+		if strings.HasPrefix("relay", file.Name()) {
+			fmt.Println("Creating device for: ", file.Name())
+		}
+	}
+
+	// TODO: Load settings that map Devices -> Functional Names.
+
+	// TODO: Setup clock trigger... on clock trigger...
+
+	// TODO: Check current clock time. Compare to desired device states.
 
 	fmt.Println("Setting up HTTP server...")
 
@@ -74,7 +83,7 @@ func main() {
 	//http.HandleFunc("/events", broker.ServeHTTP)
 
 	cert := flag.String("cert", "/etc/ssl/certs/pidroponics.pem", "The certificate for this server.")
-	certkey := flag.String("key", "/etc/ssl/certs/pidroponics.pem", "The key for the server cert.")
+	certkey := flag.String("key", "/etc/ssl/certs/pidroponics-key.pem", "The key for the server cert.")
 
 	flag.Parse()
 
