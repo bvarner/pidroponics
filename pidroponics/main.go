@@ -51,11 +51,13 @@ func run() error {
 	// /sys/bus/iio/devices/iio:devicen/name
 	//    srf04
 	//    ads1015
+	fmt.Println("Enumerating devices...");
 	files, err := ioutil.ReadDir("/sys/bus/iio/devices")
 	if err != nil {
 		return err
 	}
 	for _, file := range files {
+		fmt.Println("    ..." + file.Name())
 		if strings.HasPrefix("iio:device", file.Name()) {
 			devnamebuf, err := ioutil.ReadFile(file.Name() + string(filepath.Separator) + "name")
 			if err != nil {
