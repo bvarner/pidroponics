@@ -58,7 +58,7 @@ func main() {
 
 	// Enumerate Relay Devices. Setup Those.
 	// /sys/class/leds/relay0/brightness
-	files, err := ioutil.ReadDir("/sys/class/leds")
+	files, err = ioutil.ReadDir("/sys/class/leds")
 	for _, file := range files {
 		if strings.HasPrefix("relay", file.Name()) {
 			fmt.Println("Creating device for: ", file.Name())
