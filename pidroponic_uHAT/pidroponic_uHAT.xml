@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/bvarner/Documents/go/src/github.com/bvarner/pidroponics/pidroponic_uHAT/pidroponic_uHAT.sch</source>
+    <date>Tue 21 Apr 2020 03:38:42 PM EDT</date>
+    <tool>Eeschema 5.1.4+dfsg1-1</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Pidroponics uHAT</title>
+        <company/>
+        <rev>1.0</rev>
+        <date>2020-04-15</date>
+        <source>pidroponic_uHAT.sch</source>
+        <comment number="1" value="This Schematic is licensed under Apache License Version 2.0"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J1">
+      <value>GPIO_CONNECTOR</value>
+      <footprint>lib:PinSocket_2x20_P2.54mm_Vertical_Centered_Anchor</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_02x20_Odd_Even" description="Generic connector, double row, 02x20, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C77771F</tstamp>
+    </comp>
+    <comp ref="H1">
+      <value>MountingHole</value>
+      <footprint>lib:MountingHole_2.7mm_M2.5_uHAT_RPi</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C7C4C81</tstamp>
+    </comp>
+    <comp ref="H2">
+      <value>MountingHole</value>
+      <footprint>lib:MountingHole_2.7mm_M2.5_uHAT_RPi</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C7C7FBC</tstamp>
+    </comp>
+    <comp ref="H3">
+      <value>MountingHole</value>
+      <footprint>lib:MountingHole_2.7mm_M2.5_uHAT_RPi</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C7C8014</tstamp>
+    </comp>
+    <comp ref="H4">
+      <value>MountingHole</value>
+      <footprint>lib:MountingHole_2.7mm_M2.5_uHAT_RPi</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C7C8030</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>10uf</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">CAP CER 10UF 16V X5R 0805</field>
+        <field name="Digi-Key_PN">445-7644-1-ND</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9778F9</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>LM7805_TO220</value>
+      <footprint>Package_TO_SOT_THT:TO-220-3_Vertical</footprint>
+      <datasheet>http://www.fairchildsemi.com/ds/LM/LM7805.pdf</datasheet>
+      <fields>
+        <field name="Description">IC REG LINEAR 5V 1A TO220-3</field>
+        <field name="Digi-Key_PN">296-47192-ND</field>
+      </fields>
+      <libsource lib="Regulator_Linear" part="LM7805_TO220" description="Positive 1A 35V Linear Regulator, Fixed Output 5V, TO-220"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E97813E</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>10uf</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">CAP CER 10UF 16V X5R 0805</field>
+        <field name="Digi-Key_PN">445-7644-1-ND</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E979431</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>DMG2305UX-13</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/DMG2305UX.pdf</datasheet>
+      <fields>
+        <field name="Category">Discrete Semiconductor Products</field>
+        <field name="DK_Datasheet_Link">https://www.diodes.com/assets/Datasheets/DMG2305UX.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/diodes-incorporated/DMG2305UX-13/DMG2305UX-13DICT-ND/4251589</field>
+        <field name="Description">MOSFET P-CH 20V 4.2A SOT23</field>
+        <field name="Digi-Key_PN">DMG2305UX-13DICT-ND</field>
+        <field name="Family">Transistors - FETs, MOSFETs - Single</field>
+        <field name="MPN">DMG2305UX-13</field>
+        <field name="Manufacturer">Diodes Incorporated</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Transistors-FETs-MOSFETs-Single" part="DMG2305UX-13" description="MOSFET P-CH 20V 4.2A SOT23"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E980B0B</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>10K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 10K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE10K0CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E983568</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>47K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 47K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE47K0CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E983A86</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>DMMT5401</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23-6</footprint>
+      <fields>
+        <field name="Description">TRANS 2PNP 150V 0.2A SOT26</field>
+        <field name="Digi-Key_PN">DMMT5401-FDICT-ND</field>
+      </fields>
+      <libsource lib="dmmt5401" part="DMMT5401-raspberrypi_hat-powerpiHAT-rescue-powerpiHAT-rescue" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9DE6E3</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>3k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 3K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE3K00CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9FB648</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>3k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 3K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE3K00CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9FD922</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>3k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 3K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE3K00CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9FE04F</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>3.9k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 3.9K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE3K90CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9FE6D5</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>3.9k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 3.9K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE3K90CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9FEF4C</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>3.9k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 3.9K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE3K90CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9FF34A</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>CAT24C32</value>
+      <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <datasheet>https://www.onsemi.com/pub/Collateral/CAT24C128-D.PDF</datasheet>
+      <fields>
+        <field name="Description">IC EEPROM 32K I2C 1MHZ 8SOIC</field>
+        <field name="Digi-Key_PN">CAT24C32WI-GT3CT-ND</field>
+      </fields>
+      <libsource lib="Memory_EEPROM" part="CAT24C128" description="128 kb CMOS Serial EEPROM, SOIC-8/TSSOP-8/DFN-8"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E97B9E0</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>10K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">RES 10K OHM 0.5% 1/8W 0805</field>
+        <field name="Digi-Key_PN">RNCF0805DTE10K0CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9B9AF9</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>1935161</value>
+      <footprint>digikey-footprints:Terminal_Block_D1.3mm_P5mm</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/phoenix-contact/1935161/277-1667-ND/568614</field>
+        <field name="Description">TERM BLK 2POS SIDE ENTRY 5MM PCB</field>
+        <field name="Digi-Key_PN">277-1667-ND</field>
+        <field name="Family">Terminal Blocks - Wire to Board</field>
+        <field name="MPN">1935161</field>
+        <field name="Manufacturer">Phoenix Contact</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Terminal-Blocks-Wire-to-Board" part="1935161" description="TERM BLK 2POS SIDE ENTRY 5MM PCB"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EB483BA</tstamp>
+    </comp>
+    <comp ref="J8">
+      <value>TI ADS1115 Breakout</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector" part="Conn_01x10_Male" description="Generic connector, single row, 01x10, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA08AF1</tstamp>
+    </comp>
+    <comp ref="J11">
+      <value>S2B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/S2B-PH-K-S(LF)(SN)/455-1719-ND/926626</field>
+        <field name="Description">CONN HEADER R/A 2POS 2MM</field>
+        <field name="Digi-Key_PN">455-1719-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">S2B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="S2B-PH-K-S_LF__SN_" description="CONN HEADER R/A 2POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9FDA0F</tstamp>
+    </comp>
+    <comp ref="J10">
+      <value>S2B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/S2B-PH-K-S(LF)(SN)/455-1719-ND/926626</field>
+        <field name="Description">CONN HEADER R/A 2POS 2MM</field>
+        <field name="Digi-Key_PN">455-1719-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">S2B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="S2B-PH-K-S_LF__SN_" description="CONN HEADER R/A 2POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA00F8B</tstamp>
+    </comp>
+    <comp ref="J9">
+      <value>S2B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/S2B-PH-K-S(LF)(SN)/455-1719-ND/926626</field>
+        <field name="Description">CONN HEADER R/A 2POS 2MM</field>
+        <field name="Digi-Key_PN">455-1719-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">S2B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="S2B-PH-K-S_LF__SN_" description="CONN HEADER R/A 2POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA013B8</tstamp>
+    </comp>
+    <comp ref="J7">
+      <value>S2B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/S2B-PH-K-S(LF)(SN)/455-1719-ND/926626</field>
+        <field name="Description">CONN HEADER R/A 2POS 2MM</field>
+        <field name="Digi-Key_PN">455-1719-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">S2B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="S2B-PH-K-S_LF__SN_" description="CONN HEADER R/A 2POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA0182B</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>B4B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613</field>
+        <field name="Description">CONN HEADER VERT 4POS 2MM</field>
+        <field name="Digi-Key_PN">455-1706-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">B4B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="B4B-PH-K-S_LF__SN_" description="CONN HEADER VERT 4POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA109B6</tstamp>
+    </comp>
+    <comp ref="J4">
+      <value>B4B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613</field>
+        <field name="Description">CONN HEADER VERT 4POS 2MM</field>
+        <field name="Digi-Key_PN">455-1706-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">B4B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="B4B-PH-K-S_LF__SN_" description="CONN HEADER VERT 4POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA18FB2</tstamp>
+    </comp>
+    <comp ref="J5">
+      <value>B4B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613</field>
+        <field name="Description">CONN HEADER VERT 4POS 2MM</field>
+        <field name="Digi-Key_PN">455-1706-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">B4B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="B4B-PH-K-S_LF__SN_" description="CONN HEADER VERT 4POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA19951</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>B6B-PH-K-S_LF__SN_</value>
+      <footprint>Connector_JST:JST_PH_B6B-PH-K_1x06_P2.00mm_Vertical</footprint>
+      <datasheet>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613</field>
+        <field name="Description">CONN HEADER VERT 6POS 2MM</field>
+        <field name="Digi-Key_PN">455-1708-ND</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="MPN">B6B-PH-K-S(LF)(SN)</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="B6B-PH-K-S_LF__SN_" description="CONN HEADER VERT 6POS 2MM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA33896</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Connector" part="Conn_01x10_Male">
+      <description>Generic connector, single row, 01x10, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x10_Male</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+        <pin num="8" name="Pin_8" type="passive"/>
+        <pin num="9" name="Pin_9" type="passive"/>
+        <pin num="10" name="Pin_10" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector_Generic" part="Conn_02x20_Odd_Even">
+      <description>Generic connector, double row, 02x20, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_2x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_02x20_Odd_Even</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+        <pin num="8" name="Pin_8" type="passive"/>
+        <pin num="9" name="Pin_9" type="passive"/>
+        <pin num="10" name="Pin_10" type="passive"/>
+        <pin num="11" name="Pin_11" type="passive"/>
+        <pin num="12" name="Pin_12" type="passive"/>
+        <pin num="13" name="Pin_13" type="passive"/>
+        <pin num="14" name="Pin_14" type="passive"/>
+        <pin num="15" name="Pin_15" type="passive"/>
+        <pin num="16" name="Pin_16" type="passive"/>
+        <pin num="17" name="Pin_17" type="passive"/>
+        <pin num="18" name="Pin_18" type="passive"/>
+        <pin num="19" name="Pin_19" type="passive"/>
+        <pin num="20" name="Pin_20" type="passive"/>
+        <pin num="21" name="Pin_21" type="passive"/>
+        <pin num="22" name="Pin_22" type="passive"/>
+        <pin num="23" name="Pin_23" type="passive"/>
+        <pin num="24" name="Pin_24" type="passive"/>
+        <pin num="25" name="Pin_25" type="passive"/>
+        <pin num="26" name="Pin_26" type="passive"/>
+        <pin num="27" name="Pin_27" type="passive"/>
+        <pin num="28" name="Pin_28" type="passive"/>
+        <pin num="29" name="Pin_29" type="passive"/>
+        <pin num="30" name="Pin_30" type="passive"/>
+        <pin num="31" name="Pin_31" type="passive"/>
+        <pin num="32" name="Pin_32" type="passive"/>
+        <pin num="33" name="Pin_33" type="passive"/>
+        <pin num="34" name="Pin_34" type="passive"/>
+        <pin num="35" name="Pin_35" type="passive"/>
+        <pin num="36" name="Pin_36" type="passive"/>
+        <pin num="37" name="Pin_37" type="passive"/>
+        <pin num="38" name="Pin_38" type="passive"/>
+        <pin num="39" name="Pin_39" type="passive"/>
+        <pin num="40" name="Pin_40" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C">
+      <description>Unpolarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Mechanical" part="MountingHole">
+      <description>Mounting Hole without connection</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>MountingHole*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">H</field>
+        <field name="Value">MountingHole</field>
+      </fields>
+    </libpart>
+    <libpart lib="Memory_EEPROM" part="24LC16">
+      <aliases>
+        <alias>24LC02</alias>
+        <alias>24LC00</alias>
+        <alias>24LC04</alias>
+        <alias>24LC08</alias>
+        <alias>24LC01</alias>
+        <alias>24LC512</alias>
+        <alias>24LC64</alias>
+        <alias>24LC1025</alias>
+        <alias>24LC32</alias>
+        <alias>24LC256</alias>
+        <alias>24LC128</alias>
+        <alias>CAT24C256</alias>
+        <alias>CAT24C128</alias>
+      </aliases>
+      <description>I2C Serial EEPROM, 16Kb, DIP-8/SOIC-8/TSSOP-8/DFN-8</description>
+      <docs>http://ww1.microchip.com/downloads/en/DeviceDoc/21703d.pdf</docs>
+      <footprints>
+        <fp>DIP*W7.62mm*</fp>
+        <fp>SOIC*3.9x4.9mm*</fp>
+        <fp>TSSOP*4.4x3mm*P0.65mm*</fp>
+        <fp>DFN*3x2mm*P0.5mm*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">24LC16</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A0" type="input"/>
+        <pin num="2" name="A1" type="input"/>
+        <pin num="3" name="A2" type="input"/>
+        <pin num="4" name="GND" type="power_in"/>
+        <pin num="5" name="SDA" type="BiDi"/>
+        <pin num="6" name="SCL" type="input"/>
+        <pin num="7" name="WP" type="input"/>
+        <pin num="8" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Regulator_Linear" part="LM7805_TO220">
+      <aliases>
+        <alias>LM7806_TO220</alias>
+        <alias>LM7808_TO220</alias>
+        <alias>LM7809_TO220</alias>
+        <alias>LM7810_TO220</alias>
+        <alias>LM7812_TO220</alias>
+        <alias>LM7815_TO220</alias>
+        <alias>LM7818_TO220</alias>
+        <alias>LM7824_TO220</alias>
+        <alias>LM78M05_TO220</alias>
+        <alias>SPX2920U-3.3_TO220</alias>
+        <alias>SPX2920U-5.0_TO220</alias>
+        <alias>LF15_TO220</alias>
+        <alias>LF18_TO220</alias>
+        <alias>LF25_TO220</alias>
+        <alias>LF33_TO220</alias>
+        <alias>LF50_TO220</alias>
+        <alias>LF60_TO220</alias>
+        <alias>LF80_TO220</alias>
+        <alias>LF85_TO220</alias>
+        <alias>LF120_TO220</alias>
+        <alias>LF47_TO220</alias>
+        <alias>LF90_TO220</alias>
+        <alias>LM341T-05_TO220</alias>
+        <alias>LM341T-12_TO220</alias>
+        <alias>LM341T-15_TO220</alias>
+        <alias>LM2937xT</alias>
+      </aliases>
+      <description>Positive 1A 35V Linear Regulator, Fixed Output 5V, TO-220</description>
+      <docs>http://www.fairchildsemi.com/ds/LM/LM7805.pdf</docs>
+      <footprints>
+        <fp>TO?220*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LM7805_TO220</field>
+        <field name="Footprint">Package_TO_SOT_THT:TO-220-3_Vertical</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VI" type="power_in"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="VO" type="power_out"/>
+      </pins>
+    </libpart>
+    <libpart lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="B4B-PH-K-S_LF__SN_">
+      <description>CONN HEADER VERT 4POS 2MM</description>
+      <docs>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</docs>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">B4B-PH-K-S_LF__SN_</field>
+        <field name="Footprint">digikey-footprints:PinHeader_1x4_P2mm_Drill1mm</field>
+        <field name="Datasheet">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="Digi-Key_PN">455-1706-ND</field>
+        <field name="MPN">B4B-PH-K-S(LF)(SN)</field>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613</field>
+        <field name="Description">CONN HEADER VERT 4POS 2MM</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+        <pin num="3" name="~" type="passive"/>
+        <pin num="4" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="B6B-PH-K-S_LF__SN_">
+      <description>CONN HEADER VERT 6POS 2MM</description>
+      <docs>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</docs>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">B6B-PH-K-S_LF__SN_</field>
+        <field name="Footprint">Connector_JST:JST_PH_B6B-PH-K_1x06_P2.00mm_Vertical</field>
+        <field name="Digi-Key_PN">455-1708-ND</field>
+        <field name="MPN">B6B-PH-K-S(LF)(SN)</field>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613</field>
+        <field name="Description">CONN HEADER VERT 6POS 2MM</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+        <pin num="3" name="~" type="passive"/>
+        <pin num="4" name="~" type="passive"/>
+        <pin num="5" name="~" type="passive"/>
+        <pin num="6" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="dk_Rectangular-Connectors-Headers-Male-Pins" part="S2B-PH-K-S_LF__SN_">
+      <description>CONN HEADER R/A 2POS 2MM</description>
+      <docs>http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</docs>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">S2B-PH-K-S_LF__SN_</field>
+        <field name="Footprint">digikey-footprints:PinHeader_1x2_P2mm_Drill1mm_RA</field>
+        <field name="Datasheet">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="Digi-Key_PN">455-1719-ND</field>
+        <field name="MPN">S2B-PH-K-S(LF)(SN)</field>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="Family">Rectangular Connectors - Headers, Male Pins</field>
+        <field name="DK_Datasheet_Link">http://www.jst-mfg.com/product/pdf/eng/ePH.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/jst-sales-america-inc/S2B-PH-K-S(LF)(SN)/455-1719-ND/926626</field>
+        <field name="Description">CONN HEADER R/A 2POS 2MM</field>
+        <field name="Manufacturer">JST Sales America Inc.</field>
+        <field name="Status">Active</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="dk_Terminal-Blocks-Wire-to-Board" part="1935161">
+      <description>TERM BLK 2POS SIDE ENTRY 5MM PCB</description>
+      <docs>https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf</docs>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">1935161</field>
+        <field name="Footprint">digikey-footprints:Terminal_Block_D1.3mm_P5mm</field>
+        <field name="Datasheet">https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf</field>
+        <field name="Digi-Key_PN">277-1667-ND</field>
+        <field name="MPN">1935161</field>
+        <field name="Category">Connectors, Interconnects</field>
+        <field name="Family">Terminal Blocks - Wire to Board</field>
+        <field name="DK_Datasheet_Link">https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/phoenix-contact/1935161/277-1667-ND/568614</field>
+        <field name="Description">TERM BLK 2POS SIDE ENTRY 5MM PCB</field>
+        <field name="Manufacturer">Phoenix Contact</field>
+        <field name="Status">Active</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="dk_Transistors-FETs-MOSFETs-Single" part="DMG2305UX-13">
+      <description>MOSFET P-CH 20V 4.2A SOT23</description>
+      <docs>https://www.diodes.com/assets/Datasheets/DMG2305UX.pdf</docs>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">DMG2305UX-13</field>
+        <field name="Footprint">digikey-footprints:SOT-23-3</field>
+        <field name="Datasheet">https://www.diodes.com/assets/Datasheets/DMG2305UX.pdf</field>
+        <field name="Digi-Key_PN">DMG2305UX-13DICT-ND</field>
+        <field name="MPN">DMG2305UX-13</field>
+        <field name="Category">Discrete Semiconductor Products</field>
+        <field name="Family">Transistors - FETs, MOSFETs - Single</field>
+        <field name="DK_Datasheet_Link">https://www.diodes.com/assets/Datasheets/DMG2305UX.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/diodes-incorporated/DMG2305UX-13/DMG2305UX-13DICT-ND/4251589</field>
+        <field name="Description">MOSFET P-CH 20V 4.2A SOT23</field>
+        <field name="Manufacturer">Diodes Incorporated</field>
+        <field name="Status">Active</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="BiDi"/>
+        <pin num="2" name="S" type="BiDi"/>
+        <pin num="3" name="D" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="dmmt5401" part="DMMT5401-raspberrypi_hat-powerpiHAT-rescue-powerpiHAT-rescue">
+      <footprints>
+        <fp>SOT-26</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">DMMT5401-raspberrypi_hat-powerpiHAT-rescue-powerpiHAT-rescue</field>
+        <field name="Footprint">SOT-26</field>
+      </fields>
+      <pins>
+        <pin num="1" name="C" type="passive"/>
+        <pin num="2" name="B" type="input"/>
+        <pin num="3" name="B" type="input"/>
+        <pin num="4" name="C" type="passive"/>
+        <pin num="5" name="E" type="passive"/>
+        <pin num="6" name="E" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Connector">
+      <uri>/usr/share/kicad/library/Connector.lib</uri>
+    </library>
+    <library logical="Connector_Generic">
+      <uri>/usr/share/kicad/library/Connector_Generic.lib</uri>
+    </library>
+    <library logical="Device">
+      <uri>/usr/share/kicad/library/Device.lib</uri>
+    </library>
+    <library logical="Mechanical">
+      <uri>/usr/share/kicad/library/Mechanical.lib</uri>
+    </library>
+    <library logical="Memory_EEPROM">
+      <uri>/usr/share/kicad/library/Memory_EEPROM.lib</uri>
+    </library>
+    <library logical="Regulator_Linear">
+      <uri>/usr/share/kicad/library/Regulator_Linear.lib</uri>
+    </library>
+    <library logical="dk_Rectangular-Connectors-Headers-Male-Pins">
+      <uri>/home/bvarner/Documents/Personal/KiCad_build/digikey-kicad-library/digikey-symbols/dk_Rectangular-Connectors-Headers-Male-Pins.lib</uri>
+    </library>
+    <library logical="dk_Terminal-Blocks-Wire-to-Board">
+      <uri>/home/bvarner/Documents/Personal/KiCad_build/digikey-kicad-library/digikey-symbols/dk_Terminal-Blocks-Wire-to-Board.lib</uri>
+    </library>
+    <library logical="dk_Transistors-FETs-MOSFETs-Single">
+      <uri>/home/bvarner/Documents/Personal/KiCad_build/digikey-kicad-library/digikey-symbols/dk_Transistors-FETs-MOSFETs-Single.lib</uri>
+    </library>
+    <library logical="dmmt5401">
+      <uri>/home/bvarner/Documents/Personal/KiCad_build/kicad-user-templates/RPi_Hat_Template/dmmt5401.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="GND">
+      <node ref="J6" pin="1"/>
+      <node ref="J5" pin="1"/>
+      <node ref="J4" pin="1"/>
+      <node ref="J3" pin="1"/>
+      <node ref="J7" pin="2"/>
+      <node ref="J9" pin="2"/>
+      <node ref="J10" pin="2"/>
+      <node ref="J11" pin="2"/>
+      <node ref="J8" pin="2"/>
+      <node ref="J2" pin="2"/>
+      <node ref="J8" pin="5"/>
+      <node ref="C1" pin="2"/>
+      <node ref="U1" pin="2"/>
+      <node ref="J1" pin="9"/>
+      <node ref="J1" pin="6"/>
+      <node ref="J1" pin="34"/>
+      <node ref="R4" pin="2"/>
+      <node ref="R2" pin="2"/>
+      <node ref="R1" pin="2"/>
+      <node ref="R8" pin="2"/>
+      <node ref="R6" pin="2"/>
+      <node ref="U2" pin="2"/>
+      <node ref="C2" pin="2"/>
+      <node ref="J1" pin="30"/>
+      <node ref="J1" pin="20"/>
+      <node ref="J1" pin="14"/>
+      <node ref="U2" pin="3"/>
+      <node ref="U2" pin="4"/>
+      <node ref="U2" pin="1"/>
+    </net>
+    <net code="2" name="Net-(Q1-Pad1)">
+      <node ref="Q1" pin="1"/>
+      <node ref="R2" pin="1"/>
+      <node ref="Q2" pin="4"/>
+    </net>
+    <net code="3" name="Net-(C2-Pad1)">
+      <node ref="Q1" pin="3"/>
+      <node ref="Q2" pin="6"/>
+      <node ref="C2" pin="1"/>
+      <node ref="U1" pin="3"/>
+    </net>
+    <net code="4" name="/GPIO6">
+      <node ref="J1" pin="31"/>
+      <node ref="R6" pin="1"/>
+      <node ref="R5" pin="2"/>
+    </net>
+    <net code="5" name="/GPIO26">
+      <node ref="J6" pin="3"/>
+      <node ref="J1" pin="37"/>
+    </net>
+    <net code="6" name="/GPIO21">
+      <node ref="J1" pin="40"/>
+      <node ref="J6" pin="5"/>
+    </net>
+    <net code="7" name="/GPIO20">
+      <node ref="J1" pin="38"/>
+      <node ref="J6" pin="4"/>
+    </net>
+    <net code="8" name="/GPIO19">
+      <node ref="J1" pin="35"/>
+      <node ref="J6" pin="2"/>
+    </net>
+    <net code="9" name="+3V3">
+      <node ref="U2" pin="8"/>
+      <node ref="J8" pin="1"/>
+      <node ref="J1" pin="1"/>
+      <node ref="R9" pin="1"/>
+      <node ref="J1" pin="17"/>
+    </net>
+    <net code="10" name="+5V">
+      <node ref="J1" pin="2"/>
+      <node ref="Q2" pin="5"/>
+      <node ref="Q1" pin="2"/>
+      <node ref="J1" pin="4"/>
+      <node ref="J6" pin="6"/>
+      <node ref="J3" pin="4"/>
+      <node ref="J4" pin="4"/>
+      <node ref="J5" pin="4"/>
+    </net>
+    <net code="11" name="/ECHO_0">
+      <node ref="J3" pin="2"/>
+      <node ref="R3" pin="1"/>
+    </net>
+    <net code="12" name="/GPIO17">
+      <node ref="R7" pin="2"/>
+      <node ref="R8" pin="1"/>
+      <node ref="J1" pin="11"/>
+    </net>
+    <net code="13" name="/GPIO13">
+      <node ref="J1" pin="33"/>
+      <node ref="R3" pin="2"/>
+      <node ref="R4" pin="1"/>
+    </net>
+    <net code="14" name="Net-(J1-Pad25)">
+      <node ref="J1" pin="25"/>
+    </net>
+    <net code="15" name="Net-(J1-Pad39)">
+      <node ref="J1" pin="39"/>
+    </net>
+    <net code="16" name="/A3">
+      <node ref="J8" pin="10"/>
+      <node ref="J11" pin="1"/>
+    </net>
+    <net code="17" name="/A2">
+      <node ref="J8" pin="9"/>
+      <node ref="J10" pin="1"/>
+    </net>
+    <net code="18" name="/ECHO_1">
+      <node ref="J4" pin="2"/>
+      <node ref="R5" pin="1"/>
+    </net>
+    <net code="19" name="/GPIO25">
+      <node ref="J1" pin="22"/>
+      <node ref="J5" pin="3"/>
+    </net>
+    <net code="20" name="/ECHO_2">
+      <node ref="R7" pin="1"/>
+      <node ref="J5" pin="2"/>
+    </net>
+    <net code="21" name="/GPIO5">
+      <node ref="J1" pin="29"/>
+      <node ref="J4" pin="3"/>
+    </net>
+    <net code="22" name="/GPIO16">
+      <node ref="J3" pin="3"/>
+      <node ref="J1" pin="36"/>
+    </net>
+    <net code="23" name="/A0">
+      <node ref="J7" pin="1"/>
+      <node ref="J8" pin="7"/>
+    </net>
+    <net code="24" name="/GPIO2_SDA1">
+      <node ref="J8" pin="4"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="25" name="/GPIO3_SCL1">
+      <node ref="J1" pin="5"/>
+      <node ref="J8" pin="3"/>
+    </net>
+    <net code="26" name="/GPIO12">
+      <node ref="U2" pin="7"/>
+      <node ref="R9" pin="2"/>
+      <node ref="J1" pin="32"/>
+    </net>
+    <net code="27" name="/P12V">
+      <node ref="C1" pin="1"/>
+      <node ref="J2" pin="1"/>
+      <node ref="U1" pin="1"/>
+    </net>
+    <net code="28" name="/ID_SD">
+      <node ref="U2" pin="5"/>
+      <node ref="J1" pin="27"/>
+    </net>
+    <net code="29" name="/A1">
+      <node ref="J9" pin="1"/>
+      <node ref="J8" pin="8"/>
+    </net>
+    <net code="30" name="/ALERT">
+      <node ref="J8" pin="6"/>
+    </net>
+    <net code="31" name="/GPIO10_SPI_MOSI">
+      <node ref="J1" pin="19"/>
+    </net>
+    <net code="32" name="/GPIO22_GEN3">
+      <node ref="J1" pin="15"/>
+    </net>
+    <net code="33" name="/GPIO27_GEN2">
+      <node ref="J1" pin="13"/>
+    </net>
+    <net code="34" name="/GPIO4_GPIO_GCLK">
+      <node ref="J1" pin="7"/>
+    </net>
+    <net code="35" name="/ID_SC">
+      <node ref="J1" pin="28"/>
+      <node ref="U2" pin="6"/>
+    </net>
+    <net code="36" name="/GPIO9_SPI_MISO">
+      <node ref="J1" pin="21"/>
+    </net>
+    <net code="37" name="Net-(Q2-Pad1)">
+      <node ref="Q2" pin="2"/>
+      <node ref="Q2" pin="3"/>
+      <node ref="R1" pin="1"/>
+      <node ref="Q2" pin="1"/>
+    </net>
+    <net code="38" name="/GPIO15_RXD0">
+      <node ref="J1" pin="10"/>
+    </net>
+    <net code="39" name="/GPIO7_SPI_CE1_N">
+      <node ref="J1" pin="26"/>
+    </net>
+    <net code="40" name="/GPIO8_SPI_CE0_N">
+      <node ref="J1" pin="24"/>
+    </net>
+    <net code="41" name="/GPIO18_GEN1">
+      <node ref="J1" pin="12"/>
+    </net>
+    <net code="42" name="/GPIO14_TXD0">
+      <node ref="J1" pin="8"/>
+    </net>
+    <net code="43" name="/GPIO11_SPI_SCLK">
+      <node ref="J1" pin="23"/>
+    </net>
+    <net code="44" name="/GPIO24_GEN5">
+      <node ref="J1" pin="18"/>
+    </net>
+    <net code="45" name="/GPIO23_GEN4">
+      <node ref="J1" pin="16"/>
+    </net>
+  </nets>
+</export>
