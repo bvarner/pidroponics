@@ -20,52 +20,9 @@
   revision = "74d766ac1dde7458348221869a7d1e7e5fa0597e"
   version = "v1.0.1"
 
-[[projects]]
-  digest = "1:4302b86b0fb9f15c5159f0fdffdf7f8a5bdc3c5c5f3d5f7a5b7554150e2d1918"
-  name = "periph.io/x/periph"
-  packages = [
-    ".",
-    "conn",
-    "conn/gpio",
-    "conn/gpio/gpioreg",
-    "conn/gpio/gpiostream",
-    "conn/i2c",
-    "conn/i2c/i2creg",
-    "conn/physic",
-    "conn/pin",
-    "conn/pin/pinreg",
-    "conn/spi",
-    "conn/spi/spireg",
-    "host",
-    "host/allwinner",
-    "host/am335x",
-    "host/bcm283x",
-    "host/beagle/black",
-    "host/beagle/bone",
-    "host/beagle/green",
-    "host/chip",
-    "host/cpu",
-    "host/distro",
-    "host/fs",
-    "host/odroidc1",
-    "host/pine64",
-    "host/pmem",
-    "host/rpi",
-    "host/sysfs",
-    "host/videocore",
-  ]
-  pruneopts = "UT"
-  revision = "8dc522fd6d6756e1ee5f72c23f05a06a6382776c"
-  version = "v3.6.2"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = [
-    "github.com/GeertJohan/go.rice",
-    "periph.io/x/periph/conn/gpio",
-    "periph.io/x/periph/conn/gpio/gpioreg",
-    "periph.io/x/periph/host",
-  ]
+  input-imports = ["github.com/GeertJohan/go.rice"]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -29,10 +29,6 @@
   name = "github.com/GeertJohan/go.rice"
   version = "1.0.0"
 
-[[constraint]]
-  name = "periph.io/x/periph"
-  version = "3.6.2"
-
 [prune]
   go-tests = true
   unused-packages = true
