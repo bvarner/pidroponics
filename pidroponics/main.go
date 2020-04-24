@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -58,8 +59,8 @@ func run() error {
 	}
 	for _, file := range files {
 		fmt.Println("    ..." + file.Name())
-		if strings.HasPrefix("iio:device", file.Name()) {
-			devnamebuf, err := ioutil.ReadFile(file.Name() + string(filepath.Separator) + "name")
+		if strings.HasPrefix(file.Name(), "iio:device") {
+			devnamebuf, err := ioutil.ReadFile( path.Join("/sys/bus/iio/devices", file.Name() + string(filepath.Separator), "name"))
 			if err != nil {
 				return err
 			}
@@ -74,8 +75,8 @@ func run() error {
 		return err
 	}
 	for _, file := range files {
-		if strings.HasPrefix("relay", file.Name()) {
-			fmt.Println("Creating device for: ", file.Name())
+		if strings.HasPrefix(file.Name(), "relay") {
+			fmt.Println("Creating device for: ", path.Join("/sys/class/leds", file.Name()))
 		}
 	}
 
