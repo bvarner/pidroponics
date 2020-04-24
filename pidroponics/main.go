@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"path/filepath"
 	"strings"
 )
 
@@ -60,11 +59,20 @@ func run() error {
 	for _, file := range files {
 		fmt.Println("    ..." + file.Name())
 		if strings.HasPrefix(file.Name(), "iio:device") {
-			devnamebuf, err := ioutil.ReadFile( path.Join("/sys/bus/iio/devices", file.Name() + string(filepath.Separator), "name"))
+			devpath := path.Join("/sys/bus/iio/devices", file.Name())
+			devnamebuf, err := ioutil.ReadFile( path.Join(devpath, "name"))
 			if err != nil {
 				return err
 			}
-			fmt.Println("Device: " + file.Name() + " is type: " + string(devnamebuf))
+
+			devname := string(devnamebuf)
+
+			if devname == "srf04" {
+				fmt.Println("Ultrasonic transponder at: " + devpath)
+			}
+			if devname == "ads1015" {
+				fmt.Println("ADC at: " + devpath)
+			}
 		}
 	}
 
