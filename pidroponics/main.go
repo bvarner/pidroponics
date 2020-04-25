@@ -49,6 +49,8 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 		if matched, _ := regexp.MatchString("^.*relays/?$", r.URL.Path); matched {
 			// dump the whole shebang.
 			json.NewEncoder(w).Encode(relays)
+			w.WriteHeader(http.StatusOK)
+			return
 		} else {
 			matches := relayMatcher.FindStringSubmatch(r.URL.Path)
 			if len(matches) == 2 {
