@@ -64,10 +64,31 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 				w.Write([]byte("400 - Bad Request"))
 			}
 		}
-	} else {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("500 - Method Not Supported"))
+	} else if r.Method == "PUT" {
+		if matches := relayMatcher.FindStringSubmatch(r.URL.Path); len(matches) == 2 {
+			idx, err := strconv.Atoi(matches[1])
+			if err == nil {
+				decoder := json.NewDecoder(r.Body)
+				var nr pidroponics.Relay
+				err := decoder.Decode(&nr)
+				if err == nil {
+					relays[idx].Device = nr.Device
+					relays[idx].SetOn(nr.IsOn)
+
+					w.WriteHeader(http.StatusOK)
+					return
+				}
+			}
+
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+			}
+		}
 	}
+
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write([]byte("500 - Method Not Supported"))
 }
 
 

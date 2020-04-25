@@ -18,7 +18,7 @@ type Relay struct {
 }
 
 type RelayState struct {
-	Name		string
+	Device		string
 	IsOn		bool
 	Timestamp	int64
 }
@@ -65,8 +65,8 @@ func (r *Relay) writeState() error {
 }
 
 func (r *Relay) GetState() RelayState {
-	return RelayState{
-		Name:      r.Device,
+	return RelayState {
+		Device:      r.Device,
 		IsOn:      r.IsOn,
 		Timestamp: time.Now().Unix(),
 	}
