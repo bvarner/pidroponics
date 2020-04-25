@@ -20,7 +20,7 @@ var broker *pidroponics.Broker
 
 var handler http.Handler
 
-var relays []*pidroponics.Relay
+var relays[4]*pidroponics.Relay
 var relayMatcher = regexp.MustCompile("^/?relays/([0-3])$")
 
 
@@ -129,6 +129,7 @@ func run() error {
 			if err != nil {
 				log.Fatal("Unable to determine index of :" + file.Name())
 			}
+			fmt.Println("Idx: ", idx)
 			relays[idx], err = pidroponics.NewRelay(devpath, "")
 			if err != nil {
 				log.Fatal("Unable to initialize: " + devpath, err)
