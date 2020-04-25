@@ -36,6 +36,10 @@ func NewRelay(devPath string, Device string)(*Relay, error) {
 	return r, err
 }
 
+func (r *Relay) eventName() string {
+	return r.Device
+}
+
 func (r *Relay) readState() error {
 	statebuf, err := ioutil.ReadFile(path.Join(r.devDevice, "brightness"))
 	if err != nil {
