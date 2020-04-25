@@ -36,7 +36,7 @@ func NewRelay(devPath string, Device string)(*Relay, error) {
 	return r, err
 }
 
-func (r *Relay) eventName() string {
+func (r *RelayState) eventName() string {
 	return r.Device
 }
 
