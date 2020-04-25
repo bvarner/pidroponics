@@ -1,7 +1,6 @@
 package pidroponics
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -38,8 +37,7 @@ func NewRelay(devPath string, Device string)(*Relay, error) {
 }
 
 func (r *Relay) eventName() string {
-	fmt.Println("Get eventName()")
-	return r.Device
+	return "Relay"
 }
 
 func (r *Relay) readState() error {
@@ -87,7 +85,7 @@ func (r *Relay) SetOn(state bool) error {
 	err = r.writeState()
 
 	if err == nil && change {
-		r.Emit(r.GetState())
+		r.Emitter.Emit(r.GetState())
 	}
 
 	return err
