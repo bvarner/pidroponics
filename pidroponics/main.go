@@ -171,6 +171,7 @@ func run() error {
 	http.HandleFunc("/events", broker.ServeHTTP)
 
 	http.HandleFunc("/relays", RelayControl)
+	http.HandleFunc("/relays/", RelayControl)
 
 
 	cert := flag.String("cert", "/etc/ssl/certs/pidroponics.pem", "The certificate for this server.")
