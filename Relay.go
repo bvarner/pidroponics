@@ -31,13 +31,14 @@ func NewRelay(devPath string, Device string)(*Relay, error) {
 		Device: Device,
 		initialized: false,
 	}
+	r.EmitterID = r
 	err = r.readState()
 
 	return r, err
 }
 
 func (r *Relay) eventName() string {
-	return "Relay"
+	return r.Device
 }
 
 func (r *Relay) readState() error {
@@ -85,7 +86,7 @@ func (r *Relay) SetOn(state bool) error {
 	err = r.writeState()
 
 	if err == nil && change {
-		r.Emitter.Emit(r.GetState())
+		r.Emit(r.GetState())
 	}
 
 	return err
