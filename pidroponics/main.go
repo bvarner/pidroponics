@@ -23,6 +23,8 @@ var handler http.Handler
 var relays[4]*pidroponics.Relay
 var relayMatcher = regexp.MustCompile("^/?relays/([0-3])$")
 
+var transponders[3]*pidroponics.Srf04
+
 
 func redirectTLS(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://" + r.Host + r.RequestURI, http.StatusMovedPermanently)
@@ -111,6 +113,10 @@ func run() error {
 	if err != nil {
 		return err
 	}
+
+	transponderIdx := 0
+	adcIdx := 0
+
 	for _, file := range files {
 		if strings.HasPrefix(file.Name(), "iio:device") {
 			devpath := path.Join("/sys/bus/iio/devices", file.Name())
@@ -124,12 +130,16 @@ func run() error {
 			// Convert to string so we're working with proper encoding before we drop the last rune.
 			devname = devname[:len(devname) - 1]
 
-
 			if devname == "srf04" {
-				fmt.Println("Ultrasonic transponder at: " + devpath)
+				fmt.Println("Transponder[", transponderIdx, "] at: ", devpath)
+				transponderIdx++
+				
+
 			}
+
 			if devname == "ads1015" {
-				fmt.Println("ADC at: " + devpath)
+				fmt.Println("ADC[", adcIdx, "] at: " + devpath)
+				adcIdx++
 			}
 		}
 	}
@@ -148,7 +158,6 @@ func run() error {
 			if err != nil {
 				log.Fatal("Unable to determine index of :" + file.Name())
 			}
-			fmt.Println("Idx: ", idx)
 			relays[idx], err = pidroponics.NewRelay(devpath, "")
 			if err != nil {
 				log.Fatal("Unable to initialize: " + devpath, err)
