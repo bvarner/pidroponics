@@ -68,6 +68,7 @@ func run() error {
 			}
 
 			devname := string(devnamebuf)
+			devname = devname[:len(devname) - 1]
 			fmt.Println("devicename: [" + devname + "]")
 			if devname == "srf04" {
 				fmt.Println("Ultrasonic transponder at: " + devpath)
