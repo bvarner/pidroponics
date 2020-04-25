@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	rice "github.com/GeertJohan/go.rice"
@@ -10,12 +11,18 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
 var broker *pidroponics.Broker
 
 var handler http.Handler
+
+var relays []*pidroponics.Relay
+var relayMatcher = regexp.MustCompile("^/?relays/([0-3])$")
+
 
 func redirectTLS(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://" + r.Host + r.RequestURI, http.StatusMovedPermanently)
@@ -35,9 +42,38 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 	handler.ServeHTTP(w, r)
 }
 
+func RelayControl(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		fmt.Println("URL: ", r.URL.Path)
+		// check to see if this is the whole collection.
+		if matched, _ := regexp.MatchString("^.*relays/?$", r.URL.Path); matched {
+			// dump the whole shebang.
+			json.NewEncoder(w).Encode(relays)
+		} else {
+			matches := relayMatcher.FindStringSubmatch(r.URL.Path)
+			if len(matches) == 2 {
+				idx, err := strconv.Atoi(matches[1])
+				if err == nil {
+					json.NewEncoder(w).Encode(relays[idx].GetState())
+				} else {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+				}
+			} else {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("400 - Bad Request"))
+			}
+		}
+	} else {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("500 - Method Not Supported"))
+	}
+}
+
+
 func main() {
 	if err := run(); err != nil {
-		fmt.Fprint(os.Stderr, "error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -57,19 +93,19 @@ func run() error {
 		return err
 	}
 	for _, file := range files {
-		fmt.Println("    ..." + file.Name())
 		if strings.HasPrefix(file.Name(), "iio:device") {
 			devpath := path.Join("/sys/bus/iio/devices", file.Name())
 			devnamepath := path.Join(devpath, "name")
-			fmt.Println("   " + devnamepath)
 			devnamebuf, err := ioutil.ReadFile(devnamepath)
 			if err != nil {
 				return err
 			}
 
 			devname := string(devnamebuf)
+			// Convert to string so we're working with proper encoding before we drop the last rune.
 			devname = devname[:len(devname) - 1]
-			fmt.Println("devicename: [" + devname + "]")
+
+
 			if devname == "srf04" {
 				fmt.Println("Ultrasonic transponder at: " + devpath)
 			}
@@ -87,7 +123,32 @@ func run() error {
 	}
 	for _, file := range files {
 		if strings.HasPrefix(file.Name(), "relay") {
-			fmt.Println("Creating device for: ", path.Join("/sys/class/leds", file.Name()))
+			devpath := path.Join("/sys/class/leds", file.Name())
+
+			idx, err := strconv.Atoi(file.Name()[len(file.Name()) - 1:])
+			if err == nil {
+				log.Fatal("Unable to determine index of :" + file.Name())
+			}
+			relays[idx], err = pidroponics.NewRelay(devpath, "")
+			if err != nil {
+				log.Fatal("Unable to initialize: " + devpath, err)
+			}
+			relays[idx].AddListener(broker.Outgoing)
+
+			// TODO: Allow for setting / loading maps for devicenames to functions.
+			// for now, we'll just hard-code them.
+			if idx == 0 {
+				relays[idx].Device = "Lights"
+			}
+			if idx == 1 {
+				relays[idx].Device = "Pump"
+			}
+			if idx == 2 {
+				relays[idx].Device = "Fan"
+			}
+			if idx == 3 {
+				relays[idx].Device = "Valve"
+			}
 		}
 	}
 
@@ -106,7 +167,10 @@ func run() error {
 	http.HandleFunc("/", RootHandler)
 
 	// Setup the SSE Event Handler. This comes from the 'broker'.
-	//http.HandleFunc("/events", broker.ServeHTTP)
+	http.HandleFunc("/events", broker.ServeHTTP)
+
+	http.HandleFunc("/relays", RelayControl)
+
 
 	cert := flag.String("cert", "/etc/ssl/certs/pidroponics.pem", "The certificate for this server.")
 	certkey := flag.String("key", "/etc/ssl/certs/pidroponics-key.pem", "The key for the server cert.")
