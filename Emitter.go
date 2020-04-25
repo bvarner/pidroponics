@@ -34,7 +34,7 @@ func (e *Emitter) Emit(v interface{}) {
 	b, err := json.Marshal(v)
 	if err == nil {
 		for _, handler := range e.listeners {
-			fmt.Println("eventName: ", e.eventName())
+			fmt.Println("emitter:", e)
 			s := fmt.Sprintf("event: %s\ndata: %s\n", e.eventName(), string(b))
 			go func(handler chan string) {
 				handler <- s
