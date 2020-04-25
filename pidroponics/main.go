@@ -43,20 +43,20 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RelayControl(w http.ResponseWriter, r *http.Request) {
+	var err error = nil
+
 	if r.Method == "GET" {
 		fmt.Println("URL: ", r.URL.Path)
 		// check to see if this is the whole collection.
 		if matched, _ := regexp.MatchString("^.*relays/?$", r.URL.Path); matched {
 			// dump the whole shebang.
-			json.NewEncoder(w).Encode(relays)
-			w.WriteHeader(http.StatusOK)
-			return
+			err = json.NewEncoder(w).Encode(relays)
 		} else {
 			matches := relayMatcher.FindStringSubmatch(r.URL.Path)
 			if len(matches) == 2 {
 				idx, err := strconv.Atoi(matches[1])
 				if err == nil {
-					json.NewEncoder(w).Encode(relays[idx].GetState())
+					err = json.NewEncoder(w).Encode(relays[idx].GetState())
 				} else {
 					w.WriteHeader(http.StatusInternalServerError)
 					w.Write([]byte(err.Error()))
@@ -75,22 +75,21 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 				err := decoder.Decode(&nr)
 				if err == nil {
 					relays[idx].Device = nr.Device
-					relays[idx].SetOn(nr.IsOn)
-
-					w.WriteHeader(http.StatusOK)
-					return
+					err = relays[idx].SetOn(nr.IsOn)
 				}
 			}
-
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-			}
 		}
+	} else {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("500 - Method Not Supported"))
 	}
 
-	w.WriteHeader(http.StatusMethodNotAllowed)
-	w.Write([]byte("500 - Method Not Supported"))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
 }
 
 
