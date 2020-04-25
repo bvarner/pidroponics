@@ -125,8 +125,8 @@ func run() error {
 		if strings.HasPrefix(file.Name(), "relay") {
 			devpath := path.Join("/sys/class/leds", file.Name())
 
-			idx, err := strconv.Atoi(file.Name()[len(file.Name()) - 2:])
-			if err == nil {
+			idx, err := strconv.Atoi(file.Name()[len(file.Name()) - 1:])
+			if err != nil {
 				log.Fatal("Unable to determine index of :" + file.Name())
 			}
 			relays[idx], err = pidroponics.NewRelay(devpath, "")
