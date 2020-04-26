@@ -89,7 +89,7 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 4) // 32bits.
+	samp := make([]byte, 1)
 
 	n, err := s.readFile.Read(samp)
 	fmt.Println("Read ", n, " bytes from: ", s.readPath, " Err: ", err)
