@@ -3,12 +3,9 @@ package pidroponics
 import (
 	"container/ring"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
-	"strconv"
 	"time"
 )
 
@@ -18,9 +15,9 @@ type Srf04 struct {
 
 	devDevice	string
 	readPath    string
+	readFile	*os.File
 	readTic		*time.Ticker `json:"-"`
 	samples		*ring.Ring `json:"-"`
-	initialized bool
 }
 
 type Srf04State struct {
@@ -35,10 +32,10 @@ func NewSrf04(devPath string) (*Srf04, error){
 	s := &Srf04 {
 		devDevice: devPath,
 		Name: "",
-		initialized: false,
 		samples: ring.New(250),
 		readTic: nil,
 		readPath: path.Join(devPath, "in_distance_raw"),
+		readFile: nil,
 	}
 	s.EmitterID = s
 
@@ -62,7 +59,9 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 	s.readTic = readtic
 
 	_, err := os.Stat(s.readPath)
-	s.initialized = err == nil
+	if err == nil {
+		s.readFile, err = os.Open(s.readPath)
+	}
 
 	// start the background polling loop
 	go s.tickerRead()
@@ -71,13 +70,13 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 }
 
 func (s *Srf04) Close() {
-	s.initialized = false
+	s.readFile.Close()
 }
 
 func (s *Srf04) tickerRead() {
 	if s.readTic != nil {
 		for range s.readTic.C {
-			if !s.initialized {
+			if s.readFile == nil {
 				log.Println("Terminating polling loop for: ", s.Name)
 				return
 			}
@@ -90,27 +89,36 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	var err error = nil
-	if s.initialized {
-		// read the value from the sensor device
-		buf, err := ioutil.ReadFile(s.readPath)
-		// In the case that we get zero bytes, we consider this an unexpected EOF
-		// and an 'unconnected' device.
-		fmt.Println("Read: ", len(buf), " bytes from ", s.readPath)
-		if len(buf) == 0 {
-			err = io.ErrUnexpectedEOF
-		}
+	samp := make([]byte, 4) // 32bits.
 
-		if err == nil {
-			i, err := strconv.Atoi(string(buf))
-			if err == nil {
-				fmt.Println("raw distance: ", i)
-				s.samples.Value = i
-				s.samples = s.samples.Next()
-			}
-		}
-	}
+	n, err := s.readFile.Read(samp)
+	fmt.Println("Read ", n, " bytes from: ", s.readPath, " Err: ", err)
 
-	return s.samples.Prev().Value.(int), err
+	return 0, err
+	//
+	//
+	//
+	//var err error = nil
+	//if s.initialized {
+	//	// read the value from the sensor device
+	//	buf, err := ioutil.ReadFile(s.readPath)
+	//	// In the case that we get zero bytes, we consider this an unexpected EOF
+	//	// and an 'unconnected' device.
+	//	fmt.Println("Read: ", len(buf), " bytes from ", s.readPath)
+	//	if len(buf) == 0 {
+	//		err = io.ErrUnexpectedEOF
+	//	}
+	//
+	//	if err == nil {
+	//		i, err := strconv.Atoi(string(buf))
+	//		if err == nil {
+	//			fmt.Println("raw distance: ", i)
+	//			s.samples.Value = i
+	//			s.samples = s.samples.Next()
+	//		}
+	//	}
+	//}
+	//
+	//return s.samples.Prev().Value.(int), err
 }
 
