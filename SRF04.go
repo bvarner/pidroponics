@@ -89,9 +89,12 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 1)
+	samp := make([]byte, 32)
 
 	n, err := s.readFile.Read(samp)
+	if err != nil {
+		log.Fatal("Error reading from: ", s.readPath, err)
+	}
 	fmt.Println("Read ", n, " bytes from: ", s.readPath, " Err: ", err)
 
 	return 0, err
