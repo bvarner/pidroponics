@@ -93,8 +93,8 @@ func (s *Srf04) Read() (int, error) {
 	if s.initialized {
 		// read the value from the sensor device
 		buf, err := ioutil.ReadFile(s.readPath)
-		fmt.Println("srf read: ", string(buf))
-		if err == nil {
+		fmt.Println("srf read ", len(buf), " bytes")
+		if err == nil && len(buf) > 0 {
 			i, err := strconv.Atoi(string(buf))
 			if err == nil {
 				s.samples.Value = i
