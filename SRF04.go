@@ -60,7 +60,7 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 
 	_, err := os.Stat(s.readPath)
 	if err == nil {
-		s.readFile, err = os.Open(s.readPath)
+		s.readFile, err = os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
 	}
 
 	// start the background polling loop
@@ -89,7 +89,7 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 32)
+	samp := make([]byte, 4)
 
 	n, err := s.readFile.Read(samp)
 	if err != nil {
