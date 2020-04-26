@@ -27,15 +27,15 @@ type Srf04State struct {
 	Timestamp	int64
 }
 
-func NewSrf04(devPath string, name string, readTicker *time.Ticker) (*Srf04, error){
+func NewSrf04(devPath string) (*Srf04, error){
 	var err error = nil
 
 	s := &Srf04 {
 		devDevice: devPath,
-		Name: name,
+		Name: "",
 		initialized: false,
 		samples: ring.New(250),
-		readTic: readTicker,
+		readTic: nil,
 		readPath: path.Join(devPath, "in_distance_raw"),
 	}
 	s.EmitterID = s
@@ -47,23 +47,43 @@ func NewSrf04(devPath string, name string, readTicker *time.Ticker) (*Srf04, err
 		s.samples = s.samples.Next()
 	}
 
-	_, err = os.Stat(s.readPath)
-	s.initialized = err == nil
-
-	// Start the background polling.
-	go s.tickerRead()
+	err = s.Initialize("", nil)
+	if err == nil {
+		_, err = s.Read()
+	}
 
 	return s, err
 }
 
-func (s *Srf04) tickerRead() {
-	for range s.readTic.C {
-		if !s.initialized {
-			log.Println("Terminating polling loop for: ", s.Name)
-			return
-		}
+func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
+	s.Name = name
+	s.readTic = readtic
 
-		s.Read()
+	_, err := os.Stat(s.readPath)
+	s.initialized = err == nil
+
+	// start the background polling loop
+	go s.tickerRead()
+
+	return err
+}
+
+func (s *Srf04) Close() {
+	s.initialized = false
+}
+
+func (s *Srf04) tickerRead() {
+	if s.readTic != nil {
+		for range s.readTic.C {
+			if !s.initialized {
+				log.Println("Terminating polling loop for: ", s.Name)
+				return
+			}
+
+			s.Read()
+		}
+	} else {
+		log.Println("Background polling for srf04@", s.devDevice, " disabled. Reinitialize with a time.Ticker to enable.")
 	}
 }
 

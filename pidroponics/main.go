@@ -132,9 +132,11 @@ func run() error {
 
 			if devname == "srf04" {
 				fmt.Println("Transponder[", transponderIdx, "] at: ", devpath)
-				transponderIdx++
-				
-
+				transponders[transponderIdx], err = pidroponics.NewSrf04(devpath)
+				if err == nil {
+					fmt.Println("     Is Connected")
+					transponderIdx++
+				}
 			}
 
 			if devname == "ads1015" {
@@ -143,6 +145,9 @@ func run() error {
 			}
 		}
 	}
+
+	// TODO: Now that we know how many transponders we have, initialize them with a ticker for polling.
+
 
 	// Enumerate Relay Devices. Setup Those.
 	// /sys/class/leds/relay0/brightness
