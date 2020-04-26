@@ -137,6 +137,7 @@ func run() error {
 					fmt.Println("     Is Connected")
 					transponderIdx++
 				}
+				break
 			}
 
 			if devname == "ads1015" {

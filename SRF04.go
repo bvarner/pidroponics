@@ -2,6 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -92,6 +93,7 @@ func (s *Srf04) Read() (int, error) {
 	if s.initialized {
 		// read the value from the sensor device
 		buf, err := ioutil.ReadFile(s.readPath)
+		fmt.Println("srf read: ", string(buf))
 		if err == nil {
 			i, err := strconv.Atoi(string(buf))
 			if err == nil {
