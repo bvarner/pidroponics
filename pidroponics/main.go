@@ -136,6 +136,8 @@ func run() error {
 				if err == nil {
 					fmt.Println("     Is Connected")
 					transponderIdx++
+				} else {
+					fmt.Println("     Failed to read.")
 				}
 			}
 

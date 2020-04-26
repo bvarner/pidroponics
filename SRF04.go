@@ -96,7 +96,8 @@ func (s *Srf04) Read() (int, error) {
 		buf, err := ioutil.ReadFile(s.readPath)
 		// In the case that we get zero bytes, we consider this an unexpected EOF
 		// and an 'unconnected' device.
-		if err == nil && len(buf) == 0 {
+		fmt.Println("Read: ", len(buf), " bytes from ", s.readPath)
+		if len(buf) == 0 {
 			err = io.ErrUnexpectedEOF
 		}
 
