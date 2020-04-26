@@ -92,8 +92,8 @@ func (s *Srf04) Read() (int, error) {
 	samp := make([]byte, 4)
 
 	n, err := s.readFile.Read(samp)
-	if err != nil {
-		log.Fatal("Error reading from: ", s.readPath, err)
+	if os.IsTimeout(err) {
+		log.Fatal("TIMEOUT")
 	}
 	fmt.Println("Read ", n, " bytes from: ", s.readPath, " Err: ", err)
 
