@@ -2,6 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -102,6 +103,7 @@ func (s *Srf04) Read() (int, error) {
 		if err == nil {
 			i, err := strconv.Atoi(string(buf))
 			if err == nil {
+				fmt.Println("raw distance: ", i)
 				s.samples.Value = i
 				s.samples = s.samples.Next()
 			}
