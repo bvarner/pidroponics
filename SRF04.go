@@ -2,7 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
-	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -93,8 +93,13 @@ func (s *Srf04) Read() (int, error) {
 	if s.initialized {
 		// read the value from the sensor device
 		buf, err := ioutil.ReadFile(s.readPath)
-		fmt.Println("srf read ", len(buf), " bytes")
-		if err == nil && len(buf) > 0 {
+		// In the case that we get zero bytes, we consider this an unexpected EOF
+		// and an 'unconnected' device.
+		if err == nil && len(buf) == 0 {
+			err = io.ErrUnexpectedEOF
+		}
+
+		if err == nil {
 			i, err := strconv.Atoi(string(buf))
 			if err == nil {
 				s.samples.Value = i
