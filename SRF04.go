@@ -2,6 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -66,13 +67,15 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 	if err == nil {
 		defer f.Close()
 	}
-	buf := make([]byte, 4)
+	buf := make([]byte, 1)
 	// This will likely err. We'll expect that.
 	// Any error other than a timeout implies we have a device connected.
 	_, err = f.Read(buf)
 	if err != nil && os.IsTimeout(err) {
+		fmt.Println("Timeout error. Not connected.")
 		s.Initialized = false
 	} else {
+		fmt.Println("Non-timeout. Connected.")
 		// Non-timeout. Likely -EIO. We're present and accounted for.
 		s.Initialized = true
 		err = nil

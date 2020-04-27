@@ -133,12 +133,7 @@ func run() error {
 			if devname == "srf04" {
 				fmt.Println("Transponder[", transponderIdx, "] at: ", devpath)
 				transponders[transponderIdx], err = pidroponics.NewSrf04(devpath)
-				if err == nil {
-					fmt.Println("     Is Connected")
-					transponderIdx++
-				} else {
-					fmt.Println("     Failed to read.")
-				}
+				fmt.Println("   NewSrf04 err: ", err)
 			}
 
 			if devname == "ads1015" {
