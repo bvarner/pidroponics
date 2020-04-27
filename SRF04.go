@@ -2,17 +2,18 @@ package pidroponics
 
 import (
 	"container/ring"
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"path"
+	"strconv"
 	"time"
 )
 
 type Srf04 struct {
 	Emitter		`json:"-"`
 	Name		string
+	Initialized bool
 
 	devDevice	string
 	readPath    string
@@ -22,8 +23,10 @@ type Srf04 struct {
 
 type Srf04State struct {
 	Device		string
-	Distance	int
+	Distance	float32
 	Timestamp	int64
+	sampleCount	int
+	sum			int
 }
 
 func NewSrf04(devPath string) (*Srf04, error){
@@ -32,13 +35,14 @@ func NewSrf04(devPath string) (*Srf04, error){
 	s := &Srf04 {
 		devDevice: devPath,
 		Name: "",
-		samples: ring.New(250),
+		Initialized: false,
+		samples: ring.New(10),
 		readTic: nil,
 		readPath: path.Join(devPath, "in_distance_raw"),
 	}
 	s.EmitterID = s
 
-	// Initialize the ring with -1s
+	// Initialize the ring with -1 for all the values.
 	n := s.samples.Len()
 	for i := 0; i < n; i++ {
 		s.samples.Value = -1
@@ -58,6 +62,21 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 	s.readTic = readtic
 
 	_, err := os.Stat(s.readPath)
+	f, err := os.Open(s.readPath)
+	if err == nil {
+		defer f.Close()
+	}
+	buf := make([]byte, 4)
+	// This will likely err. We'll expect that.
+	// Any error other than a timeout implies we have a device connected.
+	_, err = f.Read(buf)
+	if err != nil && os.IsTimeout(err) {
+		s.Initialized = false
+	} else {
+		// Non-timeout. Likely -EIO. We're present and accounted for.
+		s.Initialized = true
+		err = nil
+	}
 
 	// start the background polling loop
 	go s.tickerRead()
@@ -65,49 +84,58 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 	return err
 }
 
+
+
+func (s *Srf04) GetState() *Srf04State {
+	state := &Srf04State{
+		Device:      s.Name,
+		Distance:    -1,
+		Timestamp:   time.Now().Unix(),
+		sampleCount: 0,
+		sum:         0,
+	}
+
+	// Add them up
+	s.samples.Do(func(v interface{}) {
+		val := v.(int)
+		if val > 0 {
+			state.sampleCount++
+			state.sum += val
+		}
+	})
+
+	// Do the division
+	if state.sampleCount > 0 {
+		state.Distance = float32(state.sum) / float32(state.sampleCount)
+	}
+
+	return state
+}
+
 func (s *Srf04) tickerRead() {
 	if s.readTic != nil {
 		for range s.readTic.C {
-			// TODO: Exit Condition
+			if !s.Initialized {
+				break
+			}
 			s.Read()
 		}
-	} else {
-		log.Println("Background polling for srf04@", s.devDevice, " disabled. Reinitialize with a time.Ticker to enable.")
 	}
 }
 
 func (s *Srf04) Read() (int, error) {
 	out, err := exec.Command("cat", s.readPath).Output()
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Distance: ", string(out))
 
-	return 0, err
-	//
-	//
-	//
-	//var err error = nil
-	//if s.initialized {
-	//	// read the value from the sensor device
-	//	buf, err := ioutil.ReadFile(s.readPath)
-	//	// In the case that we get zero bytes, we consider this an unexpected EOF
-	//	// and an 'unconnected' device.
-	//	fmt.Println("Read: ", len(buf), " bytes from ", s.readPath)
-	//	if len(buf) == 0 {
-	//		err = io.ErrUnexpectedEOF
-	//	}
-	//
-	//	if err == nil {
-	//		i, err := strconv.Atoi(string(buf))
-	//		if err == nil {
-	//			fmt.Println("raw distance: ", i)
-	//			s.samples.Value = i
-	//			s.samples = s.samples.Next()
-	//		}
-	//	}
-	//}
-	//
-	//return s.samples.Prev().Value.(int), err
+	val, err := strconv.Atoi(string(out))
+	if err != nil {
+		s.samples.Value = val
+		s.samples = s.samples.Next()
+	}
+
+	return val, err
 }
 
