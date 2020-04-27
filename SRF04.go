@@ -3,6 +3,7 @@ package pidroponics
 import (
 	"container/ring"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -60,7 +61,7 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 
 	_, err := os.Stat(s.readPath)
 	if err == nil {
-		s.readFile, err = os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice | os.ModeSocket)
+		s.readFile, err = os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
 	}
 
 	// start the background polling loop
@@ -89,13 +90,19 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 64)
+	samp := make([]byte, 4)
 
 	n, err := s.readFile.Read(samp)
 	if os.IsTimeout(err) {
-		log.Fatal("TIMEOUT")
+		log.Fatal("Read TIMEOUT")
 	}
-	fmt.Println("Read ", n, " bytes from: ", s.readPath, " Err: ", err)
+	fmt.Println("Read ", n, " bytes. Err: ", err)
+
+	n, err = io.ReadFull(s.readFile, samp)
+	if os.IsTimeout(err) {
+		log.Fatal("  ReadFull TIMEOUT")
+	}
+	fmt.Println("ReadFull ", n, "bytes. Err: ", err)
 
 	return 0, err
 	//
