@@ -85,6 +85,7 @@ func (s *Srf04) Read() (int, error) {
 	}
 	defer readFile.Close()
 
+	readFile.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
 	n, err := io.ReadFull(readFile, samp)
 	if os.IsTimeout(err) {
 		log.Fatal("  ReadFull TIMEOUT")
