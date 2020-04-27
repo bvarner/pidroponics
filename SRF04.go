@@ -50,7 +50,7 @@ func NewSrf04(devPath string) (*Srf04, error){
 		s.samples = s.samples.Next()
 	}
 
-	err = s.Initialize("", nil)
+	err = s.Initialize("", nil, 0)
 	if err == nil {
 		_, err = s.Read()
 	}
