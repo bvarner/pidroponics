@@ -2,11 +2,10 @@ package pidroponics
 
 import (
 	"container/ring"
-	"encoding/binary"
 	"fmt"
-	"io"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"time"
 )
@@ -78,26 +77,11 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 16)
-
-	readFile, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice | os.ModeCharDevice)
+	out, err := exec.Command("cat", s.readPath).Output()
 	if err != nil {
-		return 0, err
+		log.Fatal(err)
 	}
-	defer readFile.Close()
-
-	for {
-		n, err := io.ReadFull(readFile, samp)
-		if os.IsTimeout(err) {
-			log.Fatal("  ReadFull TIMEOUT")
-		}
-		fmt.Println("ReadFull ", n, "bytes. Err: ", err)
-		fmt.Println("    ", string(samp))
-		fmt.Println("    ", binary.LittleEndian.Uint32(samp[0:4]))
-		if err == io.EOF {
-			break
-		}
-	}
+	fmt.Println("Distance: ", string(out))
 
 	return 0, err
 	//
