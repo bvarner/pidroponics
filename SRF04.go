@@ -78,7 +78,7 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 4)
+	samp := make([]byte, 16)
 
 	readFile, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice | os.ModeCharDevice)
 	if err != nil {
