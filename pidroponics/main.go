@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var broker *pidroponics.Broker
@@ -133,7 +134,9 @@ func run() error {
 			if devname == "srf04" {
 				fmt.Println("Transponder[", transponderIdx, "] at: ", devpath)
 				transponders[transponderIdx], err = pidroponics.NewSrf04(devpath)
-				fmt.Println("   NewSrf04 err: ", err)
+				if err == nil {
+					transponderIdx++
+				}
 			}
 
 			if devname == "ads1015" {
@@ -142,8 +145,21 @@ func run() error {
 			}
 		}
 	}
-
 	// TODO: Now that we know how many transponders we have, initialize them with a ticker for polling.
+	transponderTicker := time.NewTicker(time.Second / 90)
+	for idx, transponder := range transponders{
+		if transponder != nil {
+			if idx == 0 {
+				transponder.Initialize("Sump", transponderTicker, 0)
+			}
+			if idx == 1 {
+				transponder.Initialize("Inlet", transponderTicker, 1)
+			}
+			if idx == 2 {
+				transponder.Initialize("Outlet", transponderTicker, 2)
+			}
+		}
+	}
 
 
 	// Enumerate Relay Devices. Setup Those.

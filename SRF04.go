@@ -58,7 +58,7 @@ func NewSrf04(devPath string) (*Srf04, error){
 	return s, err
 }
 
-func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
+func (s *Srf04) Initialize(name string, readtic *time.Ticker, tickoffset int) error {
 	s.Name = name
 	s.readTic = readtic
 
@@ -72,17 +72,15 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 	// Any error other than a timeout implies we have a device connected.
 	_, err = f.Read(buf)
 	if err != nil && os.IsTimeout(err) {
-		fmt.Println("Timeout error. Not connected.")
 		s.Initialized = false
 	} else {
-		fmt.Println("Non-timeout. Connected.")
 		// Non-timeout. Likely -EIO. We're present and accounted for.
 		s.Initialized = true
 		err = nil
 	}
 
 	// start the background polling loop
-	go s.tickerRead()
+	go s.tickerRead(tickoffset)
 
 	return err
 }
@@ -115,13 +113,21 @@ func (s *Srf04) GetState() *Srf04State {
 	return state
 }
 
-func (s *Srf04) tickerRead() {
+func (s *Srf04) tickerRead(tickoffset int) {
+	count := tickoffset
 	if s.readTic != nil {
 		for range s.readTic.C {
 			if !s.Initialized {
 				break
 			}
-			s.Read()
+			if count <= 0 {
+				fmt.Println(s.Name, " read")
+				s.Read()
+				count = 3
+			} else {
+				fmt.Println(s.Name, " skip")
+			}
+			count--
 		}
 	}
 }
