@@ -60,7 +60,7 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 
 	_, err := os.Stat(s.readPath)
 	if err == nil {
-		s.readFile, err = os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
+		s.readFile, err = os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice | os.ModeSocket)
 	}
 
 	// start the background polling loop
