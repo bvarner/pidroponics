@@ -16,7 +16,6 @@ type Srf04 struct {
 
 	devDevice	string
 	readPath    string
-	readFile	*os.File
 	readTic		*time.Ticker `json:"-"`
 	samples		*ring.Ring `json:"-"`
 }
@@ -36,7 +35,6 @@ func NewSrf04(devPath string) (*Srf04, error){
 		samples: ring.New(250),
 		readTic: nil,
 		readPath: path.Join(devPath, "in_distance_raw"),
-		readFile: nil,
 	}
 	s.EmitterID = s
 
@@ -60,9 +58,6 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 	s.readTic = readtic
 
 	_, err := os.Stat(s.readPath)
-	if err == nil {
-		s.readFile, err = os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
-	}
 
 	// start the background polling loop
 	go s.tickerRead()
@@ -70,18 +65,10 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker) error {
 	return err
 }
 
-func (s *Srf04) Close() {
-	s.readFile.Close()
-}
-
 func (s *Srf04) tickerRead() {
 	if s.readTic != nil {
 		for range s.readTic.C {
-			if s.readFile == nil {
-				log.Println("Terminating polling loop for: ", s.Name)
-				return
-			}
-
+			// TODO: Exit Condition
 			s.Read()
 		}
 	} else {
@@ -92,7 +79,13 @@ func (s *Srf04) tickerRead() {
 func (s *Srf04) Read() (int, error) {
 	samp := make([]byte, 16)
 
-	n, err := io.ReadFull(s.readFile, samp)
+	readFile, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
+	if err != nil {
+		return 0, err
+	}
+	defer readFile.Close()
+
+	n, err := io.ReadFull(readFile, samp)
 	if os.IsTimeout(err) {
 		log.Fatal("  ReadFull TIMEOUT")
 	}
