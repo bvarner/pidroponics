@@ -2,7 +2,6 @@ package pidroponics
 
 import (
 	"container/ring"
-	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
@@ -91,7 +90,7 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 5)
+	samp := make([]byte, 16)
 
 	n, err := s.readFile.Read(samp)
 	if os.IsTimeout(err) {
@@ -104,7 +103,7 @@ func (s *Srf04) Read() (int, error) {
 		log.Fatal("  ReadFull TIMEOUT")
 	}
 	fmt.Println("ReadFull ", n, "bytes. Err: ", err)
-	fmt.Println("    ", hex.EncodeToString(samp))
+	fmt.Println("    ", string(samp))
 
 	return 0, err
 	//
