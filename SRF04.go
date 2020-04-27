@@ -133,7 +133,7 @@ func (s *Srf04) Read() (int, error) {
 		log.Fatal(err)
 	}
 
-	val, err := strconv.Atoi(string(out))
+	val, err := strconv.Atoi(string(out[:len(out) - 2]))
 	if err != nil {
 		s.samples.Value = val
 		s.samples = s.samples.Next()
