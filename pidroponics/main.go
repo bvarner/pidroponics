@@ -145,7 +145,7 @@ func run() error {
 			}
 		}
 	}
-	// TODO: Now that we know how many transponders we have, initialize them with a ticker for polling.
+	// Now that we know how many transponders we have, initialize them with a ticker for polling their state.
 	transponderTicker := time.NewTicker(time.Second / 90)
 	for idx, transponder := range transponders{
 		if transponder != nil {

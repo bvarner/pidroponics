@@ -2,7 +2,6 @@ package pidroponics
 
 import (
 	"container/ring"
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -121,11 +120,8 @@ func (s *Srf04) tickerRead(tickoffset int) {
 				break
 			}
 			if count <= 0 {
-				fmt.Println(s.Name, " read")
 				s.Read()
 				count = 3
-			} else {
-				fmt.Println(s.Name, " skip")
 			}
 			count--
 		}
