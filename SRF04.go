@@ -2,6 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"log"
@@ -77,7 +78,7 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 16)
+	samp := make([]byte, 4)
 
 	readFile, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
 	if err != nil {
@@ -92,6 +93,7 @@ func (s *Srf04) Read() (int, error) {
 		}
 		fmt.Println("ReadFull ", n, "bytes. Err: ", err)
 		fmt.Println("    ", string(samp))
+		fmt.Println("    ", binary.LittleEndian.Uint32(samp[0:4]))
 		if err == io.EOF {
 			break
 		}
