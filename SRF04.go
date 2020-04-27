@@ -92,13 +92,7 @@ func (s *Srf04) tickerRead() {
 func (s *Srf04) Read() (int, error) {
 	samp := make([]byte, 16)
 
-	n, err := s.readFile.Read(samp)
-	if os.IsTimeout(err) {
-		log.Fatal("Read TIMEOUT")
-	}
-	fmt.Println("Read ", n, " bytes. Err: ", err)
-
-	n, err = io.ReadFull(s.readFile, samp)
+	n, err := io.ReadFull(s.readFile, samp)
 	if os.IsTimeout(err) {
 		log.Fatal("  ReadFull TIMEOUT")
 	}
