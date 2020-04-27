@@ -90,7 +90,7 @@ func (s *Srf04) tickerRead() {
 }
 
 func (s *Srf04) Read() (int, error) {
-	samp := make([]byte, 4)
+	samp := make([]byte, 8)
 
 	n, err := s.readFile.Read(samp)
 	if os.IsTimeout(err) {
