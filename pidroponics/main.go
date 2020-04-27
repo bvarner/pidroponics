@@ -145,7 +145,9 @@ func run() error {
 			}
 		}
 	}
+
 	// Now that we know how many transponders we have, initialize them with a ticker for polling their state.
+	// TODO: Allow for setting / loading maps for devicenames to functions.
 	transponderTicker := time.NewTicker(time.Second / 90)
 	for idx, transponder := range transponders{
 		if transponder != nil {
@@ -160,7 +162,6 @@ func run() error {
 			}
 		}
 	}
-
 
 	// Enumerate Relay Devices. Setup Those.
 	// /sys/class/leds/relay0/brightness
