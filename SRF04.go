@@ -152,18 +152,25 @@ func (s *Srf04) Read() (int, error) {
  */
 	// Also reliable. But much faster.
 	var err error = nil
-	n := 0
+	bytesRead := 0
 
 	// Loop until N > 0 AND err != EOF && err != timeout.
-	for ok := true; ok; ok = n == 0 && err != io.EOF && !os.IsTimeout(err) {
-		n, err = s.readFile.Read(s.readBuf)
+	for {
+		n, err := s.readFile.Read(s.readBuf)
+		bytesRead += n
+		if os.IsTimeout(err) {
+			return 0, err
+		}
+		if err == io.EOF {
+			break
+		}
 	}
-	if os.IsTimeout(err) {
+	if os.IsTimeout(err) || bytesRead == 0{
 		return 0, err
 	}
 
-	fmt.Println("n: ", n, " err: ", err, " s.readbuf:", string(s.readBuf))
-	val, err := strconv.Atoi(string(s.readBuf[:n - 1]))
+	fmt.Println("n: ", bytesRead, " err: ", err, " s.readbuf:", string(s.readBuf))
+	val, err := strconv.Atoi(string(s.readBuf[:bytesRead - 1]))
 	if err == nil {
 		s.samples.Value = val
 		s.samples = s.samples.Next()
