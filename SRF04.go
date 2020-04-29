@@ -185,6 +185,7 @@ func (s *Srf04) Read() (int, error) {
 			s.samples.Value = val
 			s.samples = s.samples.Next()
 		}
+		// TODO: Use a different ticker for this.
 		go func() {s.Emit(s.GetState())}()
 		return val, err
 	}
