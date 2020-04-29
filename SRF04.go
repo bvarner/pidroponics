@@ -2,7 +2,6 @@ package pidroponics
 
 import (
 	"container/ring"
-	"fmt"
 	"io"
 	"os"
 	"path"
@@ -122,7 +121,6 @@ func (s *Srf04) GetState() *Srf04State {
 	}
 
 	// TODO: Standard Deviation
-	fmt.Println(state)
 
 	return state
 }
