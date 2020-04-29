@@ -144,12 +144,13 @@ func (s *Srf04) Read() (int, error) {
  */
 	buf := make([]byte, 4096)
 	f, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
-	n, err := f.Read(buf)
-	fmt.Println("Initial Read: ", n, " err:", err)
-	if err != nil && err != io.EOF && !os.IsTimeout(err) {
+	n := 0
+
+	for ok := true; ok; ok = n == 0 && err != io.EOF && !os.IsTimeout(err){
 		n, err = f.Read(buf)
-		fmt.Println("Second Read: ", n, " err:", err)
-	} else if os.IsTimeout(err) {
+		fmt.Println("Read: ", n, " err:", err)
+	}
+	if os.IsTimeout(err) {
 		return 0, err
 	}
 
