@@ -2,6 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
+	"fmt"
 	"io"
 	"os"
 	"path"
@@ -161,6 +162,7 @@ func (s *Srf04) Read() (int, error) {
 		return 0, err
 	}
 
+	fmt.Println("n: ", n, " err: ", err, " s.readbuf:", string(s.readBuf))
 	val, err := strconv.Atoi(string(s.readBuf[:n - 1]))
 	if err == nil {
 		s.samples.Value = val
