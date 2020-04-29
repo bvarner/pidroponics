@@ -2,9 +2,9 @@ package pidroponics
 
 import (
 	"container/ring"
-	"log"
+	"fmt"
+	"io"
 	"os"
-	"os/exec"
 	"path"
 	"strconv"
 	"time"
@@ -129,6 +129,7 @@ func (s *Srf04) tickerRead(tickoffset int) {
 }
 
 func (s *Srf04) Read() (int, error) {
+/** Reliable, but slow.
 	out, err := exec.Command("cat", s.readPath).Output()
 
 	if err != nil {
@@ -137,6 +138,24 @@ func (s *Srf04) Read() (int, error) {
 
 	val, err := strconv.Atoi(string(out[:len(out) - 2]))
 	if err != nil {
+		s.samples.Value = val
+		s.samples = s.samples.Next()
+	}
+ */
+	buf := make([]byte, 4096)
+	f, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
+	n, err := f.Read(buf)
+	fmt.Println("Initial Read: ", n, " err:", err)
+	if err != nil && err != io.EOF && !os.IsTimeout(err) {
+		n, err = f.Read(buf)
+		fmt.Println("Second Read: ", n, " err:", err)
+	} else if os.IsTimeout(err) {
+		return 0, err
+	}
+
+	val, err := strconv.Atoi(string(buf[:n]))
+	if err != nil {
+		fmt.Println("    ", val)
 		s.samples.Value = val
 		s.samples = s.samples.Next()
 	}

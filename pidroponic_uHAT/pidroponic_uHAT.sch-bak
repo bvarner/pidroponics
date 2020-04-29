@@ -1036,10 +1036,10 @@ $EndComp
 Text Label 7600 1900 2    50   ~ 0
 P3V3_HAT
 $Comp
-L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J?
+L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J7
 U 1 1 5EAAA21F
 P 7700 1900
-F 0 "J?" V 7799 1772 50  0000 R CNN
+F 0 "J7" V 7799 1772 50  0000 R CNN
 F 1 "B4B-PH-K-S_LF__SN_" V 7890 1772 50  0000 R CNN
 F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 7900 2100 60  0001 L CNN
 F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 7900 2200 60  0001 L CNN
@@ -1056,10 +1056,10 @@ F 12 "Active" H 7900 3100 60  0001 L CNN "Status"
 	0    -1   1    0   
 $EndComp
 $Comp
-L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J?
+L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J9
 U 1 1 5EAABF94
 P 7700 2450
-F 0 "J?" V 7799 2322 50  0000 R CNN
+F 0 "J9" V 7799 2322 50  0000 R CNN
 F 1 "B4B-PH-K-S_LF__SN_" V 7890 2322 50  0000 R CNN
 F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 7900 2650 60  0001 L CNN
 F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 7900 2750 60  0001 L CNN

@@ -864,7 +864,7 @@ U 1 1 5EB483BA
 P 850 5850
 F 0 "J2" V 625 5933 50  0000 C CNN
 F 1 "1935161" V 716 5933 50  0000 C CNN
-F 2 "digikey-footprints:Terminal_Block_D1.3mm_P5mm" H 1050 6050 60  0001 L CNN
+F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-5.0-H_1x02_P5.00mm_Horizontal" H 1050 6050 60  0001 L CNN
 F 3 "https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf" H 1050 6150 60  0001 L CNN
 F 4 "277-1667-ND" H 1050 6250 60  0001 L CNN "Digi-Key_PN"
 F 5 "1935161" H 1050 6350 60  0001 L CNN "MPN"
