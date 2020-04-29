@@ -38,7 +38,7 @@ func NewSrf04(devPath string) (*Srf04, error){
 		devDevice: devPath,
 		Name: "",
 		Initialized: false,
-		samples: ring.New(6),
+		samples: ring.New(30),
 		readTic: nil,
 		readPath: path.Join(devPath, "in_distance_raw"),
 		readBuf: make([]byte, 4096),
@@ -121,6 +121,7 @@ func (s *Srf04) GetState() *Srf04State {
 		state.Distance = float32(state.sum) / float32(state.sampleCount)
 	}
 
+	// TODO: Standard Deviation
 	fmt.Println(state)
 
 	return state
