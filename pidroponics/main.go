@@ -149,17 +149,20 @@ func run() error {
 	// Now that we know how many transponders we have, initialize them with a ticker for polling their state.
 	// TODO: Allow for setting / loading maps for devicenames to functions.
 //	transponderTicker := time.NewTicker(time.Second / 90)
-	transponderTicker := time.NewTicker(time.Second / 6)
-	for idx, transponder := range transponders{
+	transponderTicker := time.NewTicker(time.Second / 18)
+	for idx, transponder := range transponders {
 		if transponder != nil {
 			if idx == 0 {
-				transponder.Initialize("Sump", transponderTicker, 0)
+				err = transponder.Initialize("Sump", transponderTicker, 0)
 			}
 			if idx == 1 {
-				transponder.Initialize("Inlet", transponderTicker, 1)
+				err = transponder.Initialize("Inlet", transponderTicker, 1)
 			}
 			if idx == 2 {
-				transponder.Initialize("Outlet", transponderTicker, 2)
+				err = transponder.Initialize("Outlet", transponderTicker, 2)
+			}
+			if err != nil {
+				transponder.Close()
 			}
 		}
 	}

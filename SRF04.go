@@ -2,7 +2,6 @@ package pidroponics
 
 import (
 	"container/ring"
-	"fmt"
 	"io"
 	"os"
 	"path"
@@ -17,6 +16,8 @@ type Srf04 struct {
 
 	devDevice	string
 	readPath    string
+	readBuf		[]byte `json:"-"`
+	readFile	*os.File `json:"-"`
 	readTic		*time.Ticker `json:"-"`
 	samples		*ring.Ring `json:"-"`
 }
@@ -36,9 +37,10 @@ func NewSrf04(devPath string) (*Srf04, error){
 		devDevice: devPath,
 		Name: "",
 		Initialized: false,
-		samples: ring.New(10),
+		samples: ring.New(6),
 		readTic: nil,
 		readPath: path.Join(devPath, "in_distance_raw"),
+		readBuf: make([]byte, 4096),
 	}
 	s.EmitterID = s
 
@@ -62,19 +64,19 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker, tickoffset int) er
 	s.readTic = readtic
 
 	_, err := os.Stat(s.readPath)
-	f, err := os.Open(s.readPath)
-	if err == nil {
-		defer f.Close()
-	}
+	f, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
 	buf := make([]byte, 1)
 	// This will likely err. We'll expect that.
 	// Any error other than a timeout implies we have a device connected.
 	_, err = f.Read(buf)
 	if err != nil && os.IsTimeout(err) {
 		s.Initialized = false
+		s.readFile = nil
+		f.Close()
 	} else {
 		// Non-timeout. Likely -EIO. We're present and accounted for.
 		s.Initialized = true
+		s.readFile = f
 		err = nil
 	}
 
@@ -84,7 +86,12 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker, tickoffset int) er
 	return err
 }
 
-
+func (s *Srf04) Close() error {
+	if s.readFile != nil {
+		return s.readFile.Close()
+	}
+	return nil
+}
 
 func (s *Srf04) GetState() *Srf04State {
 	state := &Srf04State{
@@ -142,24 +149,23 @@ func (s *Srf04) Read() (int, error) {
 		s.samples = s.samples.Next()
 	}
  */
-	buf := make([]byte, 4096)
-	f, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
+	// Also reliable. But much faster.
+	var err error = nil
 	n := 0
 
+	// Loop until N > 0 AND err != EOF && err != timeout.
 	for ok := true; ok; ok = n == 0 && err != io.EOF && !os.IsTimeout(err) {
-		n, err = f.Read(buf)
+		n, err = s.readFile.Read(s.readBuf)
 	}
 	if os.IsTimeout(err) {
 		return 0, err
 	}
 
-	val, err := strconv.Atoi(string(buf[:n - 1]))
+	val, err := strconv.Atoi(string(s.readBuf[:n - 1]))
 	if err == nil {
-		fmt.Println("    ", val)
 		s.samples.Value = val
 		s.samples = s.samples.Next()
 	}
 
 	return val, err
 }
-
