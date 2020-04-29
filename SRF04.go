@@ -156,19 +156,25 @@ func (s *Srf04) Read() (int, error) {
 	}
  */
 	// Seek should tell us the new offset (0) and no err.
-	bytesRead, err := s.readFile.Seek(0, 0)
+	bytesRead := 0
+	_, err := s.readFile.Seek(0, 0)
 
 	// Loop until N > 0 AND err != EOF && err != timeout.
-	for {
-		n, err := s.readFile.Read(s.readBuf)
-		bytesRead += int64(n)
-		if os.IsTimeout(err) {
-			// bail out.
-			return 0, err
-		}
-		if err == io.EOF {
-			// Success!
-			break
+	if err == nil {
+		n := 0
+		for {
+			n, err = s.readFile.Read(s.readBuf)
+			bytesRead += n
+			if os.IsTimeout(err) {
+				// bail out.
+				bytesRead = 0
+				break
+			}
+			if err == io.EOF {
+				// Success!
+				break
+			}
+			// Any other err means 'keep trying to read.'
 		}
 	}
 
