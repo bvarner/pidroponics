@@ -60,6 +60,10 @@ func NewSrf04(devPath string) (*Srf04, error){
 	return s, err
 }
 
+func (s *Srf04) eventName() string{
+	return s.Name
+}
+
 func (s *Srf04) Initialize(name string, readtic *time.Ticker, tickoffset int) error {
 	s.Name = name
 	s.readTic = readtic
@@ -116,6 +120,8 @@ func (s *Srf04) GetState() *Srf04State {
 	if state.sampleCount > 0 {
 		state.Distance = float32(state.sum) / float32(state.sampleCount)
 	}
+
+	fmt.Println(state)
 
 	return state
 }
@@ -177,10 +183,10 @@ func (s *Srf04) Read() (int, error) {
 	if bytesRead > 0 { // paranoia
 		val, err := strconv.Atoi(string(s.readBuf[:bytesRead-1]))
 		if err == nil {
-			fmt.Println(val)
 			s.samples.Value = val
 			s.samples = s.samples.Next()
 		}
+		go func() {s.Emit(s.GetState())}()
 		return val, err
 	}
 
