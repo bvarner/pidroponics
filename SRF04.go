@@ -155,25 +155,26 @@ func (s *Srf04) Read() (int, error) {
 		s.samples = s.samples.Next()
 	}
  */
-	// Also reliable. But much faster.
-	var err error = nil
-	bytesRead := 0
+	// Seek should tell us the new offset (0) and no err.
+	bytesRead, err := s.readFile.Seek(0, 0)
+	fmt.Println("seek: ", bytesRead, " err: ", err)
 
 	// Loop until N > 0 AND err != EOF && err != timeout.
 	for {
 		n, err := s.readFile.Read(s.readBuf)
-		bytesRead += n
-		fmt.Println("n: ", bytesRead, " err: ", err, " s.readbuf:", string(s.readBuf))
+		bytesRead += int64(n)
 		if os.IsTimeout(err) {
+			// bail out.
 			return 0, err
 		}
 		if err == io.EOF {
-			s.readFile.Seek(0, 0)
+			// Success!
 			break
 		}
 	}
 
-	if !os.IsTimeout(err) && bytesRead > 0 {
+	// We shouldn't ever get here if we didn't read anything.
+	if bytesRead > 0 { // paranoia
 		val, err := strconv.Atoi(string(s.readBuf[:bytesRead-1]))
 		if err == nil {
 			s.samples.Value = val
