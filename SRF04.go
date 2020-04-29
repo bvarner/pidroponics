@@ -158,6 +158,7 @@ func (s *Srf04) Read() (int, error) {
 	for {
 		n, err := s.readFile.Read(s.readBuf)
 		bytesRead += n
+		fmt.Println("n: ", bytesRead, " err: ", err, " s.readbuf:", string(s.readBuf))
 		if os.IsTimeout(err) {
 			return 0, err
 		}
@@ -165,16 +166,15 @@ func (s *Srf04) Read() (int, error) {
 			break
 		}
 	}
-	if os.IsTimeout(err) || bytesRead == 0{
-		return 0, err
+
+	if !os.IsTimeout(err) && bytesRead > 0 {
+		val, err := strconv.Atoi(string(s.readBuf[:bytesRead-1]))
+		if err == nil {
+			s.samples.Value = val
+			s.samples = s.samples.Next()
+		}
+		return val, err
 	}
 
-	fmt.Println("n: ", bytesRead, " err: ", err, " s.readbuf:", string(s.readBuf))
-	val, err := strconv.Atoi(string(s.readBuf[:bytesRead - 1]))
-	if err == nil {
-		s.samples.Value = val
-		s.samples = s.samples.Next()
-	}
-
-	return val, err
+	return 0, err
 }
