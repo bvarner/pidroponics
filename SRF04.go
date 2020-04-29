@@ -157,7 +157,6 @@ func (s *Srf04) Read() (int, error) {
  */
 	// Seek should tell us the new offset (0) and no err.
 	bytesRead, err := s.readFile.Seek(0, 0)
-	fmt.Println("seek: ", bytesRead, " err: ", err)
 
 	// Loop until N > 0 AND err != EOF && err != timeout.
 	for {
@@ -177,6 +176,7 @@ func (s *Srf04) Read() (int, error) {
 	if bytesRead > 0 { // paranoia
 		val, err := strconv.Atoi(string(s.readBuf[:bytesRead-1]))
 		if err == nil {
+			fmt.Println(val)
 			s.samples.Value = val
 			s.samples = s.samples.Next()
 		}
