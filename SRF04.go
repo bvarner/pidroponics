@@ -137,7 +137,7 @@ func (s *Srf04) Read() (int, error) {
 	}
 
 	val, err := strconv.Atoi(string(out[:len(out) - 2]))
-	if err != nil {
+	if err == nil {
 		s.samples.Value = val
 		s.samples = s.samples.Next()
 	}
@@ -154,7 +154,7 @@ func (s *Srf04) Read() (int, error) {
 	}
 
 	val, err := strconv.Atoi(string(buf[:n - 1]))
-	if err != nil {
+	if err == nil {
 		fmt.Println("    ", val)
 		s.samples.Value = val
 		s.samples = s.samples.Next()
