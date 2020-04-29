@@ -146,9 +146,8 @@ func (s *Srf04) Read() (int, error) {
 	f, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
 	n := 0
 
-	for ok := true; ok; ok = n == 0 && err != io.EOF && !os.IsTimeout(err){
+	for ok := true; ok; ok = n == 0 && err != io.EOF && !os.IsTimeout(err) {
 		n, err = f.Read(buf)
-		fmt.Println("Read: ", n, " err:", err)
 	}
 	if os.IsTimeout(err) {
 		return 0, err
