@@ -4,7 +4,6 @@ import (
 	"container/ring"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path"
 	"strconv"
@@ -79,10 +78,6 @@ func (s *Srf04) Initialize(name string, readtic *time.Ticker, tickoffset int) er
 		// Non-timeout. Likely -EIO. We're present and accounted for.
 		s.Initialized = true
 		s.readFile = f
-		_, err = f.Seek(0, 0)
-		if err != nil {
-			log.Fatal("Error seeking file: ", err)
-		}
 		err = nil
 	}
 
