@@ -141,7 +141,7 @@ func NewADS1115(devPath string) (*ADS1115, error) {
 
 	// Identify the /dev device...
 	_, devFileName := path.Split(a.devPath)
-	a.devDevice, err = os.Open(path.Join("dev", devFileName))
+	a.devDevice, err = os.Open(path.Join("/dev", devFileName))
 	if err != nil {
 		return a, err
 	}
