@@ -143,7 +143,10 @@ func run() error {
 
 			if devname == "ads1015" {
 				fmt.Println("ADC[", adcIdx, "] at: " + devpath)
-				adcs[adcIdx], err = pidroponics.NewAdc(devpath)
+				adcs[adcIdx], err = pidroponics.NewADS1115(devpath)
+				if err != nil {
+					log.Fatal("Error initializing ADC: ", err)
+				}
 				adcIdx++
 			}
 		}
