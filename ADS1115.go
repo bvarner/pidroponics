@@ -147,13 +147,22 @@ func NewADS1115(devPath string) (*ADS1115, error) {
 	}
 	go a.readLoop()
 
+	fmt.Println("Opening Trigger and starting up.")
+	a.trigger, err = os.OpenFile(path.Join(triggerDev, "trigger_now"), os.O_WRONLY | os.O_SYNC, 0)
+	if err != nil {
+		return a, err
+	}
+
+	// Every tick, write to the file.
 	a.triggerTic = time.NewTicker(time.Second / SPS)
+	a.Initialized = true
 	go a.tickerRead()
 
 	return a, err
 }
 
 func (a *ADS1115) Close() {
+	a.Initialized = false
 	a.devDevice.Close()
 	a.trigger.Close()
 }
