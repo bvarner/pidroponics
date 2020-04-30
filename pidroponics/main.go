@@ -21,10 +21,12 @@ var broker *pidroponics.Broker
 
 var handler http.Handler
 
-var relays[4]*pidroponics.Relay
+var relays[4] *pidroponics.Relay
 var relayMatcher = regexp.MustCompile("^/?relays/([0-3])$")
 
-var transponders[3]*pidroponics.Srf04
+var transponders[3] *pidroponics.Srf04
+
+var adcs[1] *pidroponics.ADS1115
 
 
 func redirectTLS(w http.ResponseWriter, r *http.Request) {
@@ -141,6 +143,7 @@ func run() error {
 
 			if devname == "ads1015" {
 				fmt.Println("ADC[", adcIdx, "] at: " + devpath)
+				adcs[adcIdx], err = pidroponics.NewAdc(devpath)
 				adcIdx++
 			}
 		}
@@ -148,7 +151,7 @@ func run() error {
 
 	// Now that we know how many transponders we have, initialize them with a ticker for polling their state.
 	// TODO: Allow for setting / loading maps for devicenames to functions.
-//	transponderTicker := time.NewTicker(time.Second / 90)
+	// TODO: Allow for setting the polling interval of the transponders.
 	transponderTicker := time.NewTicker(time.Second / 90)
 	for idx, transponder := range transponders {
 		if transponder != nil {
