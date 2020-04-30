@@ -2,6 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -185,14 +186,32 @@ func (a *ADS1115) Read() error {
 	return err
 }
 
+/*
+voltage0-voltage1:  (input, index: 0, format: le:S16/16>>0)
+voltage0-voltage3:  (input, index: 1, format: le:S16/16>>0)
+voltage1-voltage3:  (input, index: 2, format: le:S16/16>>0)
+voltage2-voltage3:  (input, index: 3, format: le:S16/16>>0)
+voltage0:  (input, index: 4, format: le:S16/16>>0)
+voltage1:  (input, index: 5, format: le:S16/16>>0)
+voltage2:  (input, index: 6, format: le:S16/16>>0)
+voltage3:  (input, index: 7, format: le:S16/16>>0)
+timestamp:  (input, index: 8, format: le:S64/64>>0)
+*/
 func (a *ADS1115) readLoop() {
-	samp := make([]byte, 4096)
+	samp := make([]byte, 16)
 	// TODO create a buffer.
 	for {
 		n, _ := a.devDevice.Read(samp)
+		// should be two bytes per enabled sample channel + 4 bytes timestamp.
+		v0 := binary.LittleEndian.Uint16(samp[0:2])
+		v1 := binary.LittleEndian.Uint16(samp[2:4])
+		v2 := binary.LittleEndian.Uint16(samp[4:6])
+		v3 := binary.LittleEndian.Uint16(samp[6:8])
+		ts := tsConvert(samp[8:16])
 
 		// slice out the bytes and record the values.
 		fmt.Println("ADS Read: ", n)
+		fmt.Println("", ts, " v0:", v0, " v1:", v1, " v2:", v2, " v3:", v3)
 		break
 	}
 }
