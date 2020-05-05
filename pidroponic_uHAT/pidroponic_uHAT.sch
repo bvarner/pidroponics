@@ -86,10 +86,6 @@ F 3 "" H 1800 1050 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	1800 1150 1800 1050
-Wire Wire Line
-	2050 1950 1800 1950
-Wire Wire Line
-	1800 1950 1800 1150
 Connection ~ 1800 1150
 $Comp
 L power:+5V #PWR0104
@@ -323,35 +319,9 @@ F 0 "C1" H 1715 6046 50  0000 L CNN
 F 1 "10uf" H 1715 5955 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 1638 5850 50  0001 C CNN
 F 3 "~" H 1600 6000 50  0001 C CNN
-F 4 "CAP CER 10UF 16V X5R 0805" H 1600 6000 50  0001 C CNN "Description"
-F 5 "445-7644-1-ND" H 1600 6000 50  0001 C CNN "Digi-Key_PN"
+F 4 "CAP CER 10UF 10V X5R 0805" H 1600 6000 50  0001 C CNN "Description"
+F 5 "1276-1052-1-ND" H 1600 6000 50  0001 C CNN "Digi-Key_PN"
 	1    1600 6000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Regulator_Linear:LM7805_TO220 U1
-U 1 1 5E97813E
-P 2150 5850
-F 0 "U1" H 2150 6092 50  0000 C CNN
-F 1 "LM7805_TO220" H 2150 6001 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 2150 6075 50  0001 C CIN
-F 3 "http://www.fairchildsemi.com/ds/LM/LM7805.pdf" H 2150 5800 50  0001 C CNN
-F 4 "IC REG LINEAR 5V 1A TO220-3" H 2150 5850 50  0001 C CNN "Description"
-F 5 "296-47192-ND" H 2150 5850 50  0001 C CNN "Digi-Key_PN"
-	1    2150 5850
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C2
-U 1 1 5E979431
-P 2650 6000
-F 0 "C2" H 2765 6046 50  0000 L CNN
-F 1 "10uf" H 2765 5955 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 2688 5850 50  0001 C CNN
-F 3 "~" H 2650 6000 50  0001 C CNN
-F 4 "CAP CER 10UF 16V X5R 0805" H 2650 6000 50  0001 C CNN "Description"
-F 5 "445-7644-1-ND" H 2650 6000 50  0001 C CNN "Digi-Key_PN"
-	1    2650 6000
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -422,8 +392,6 @@ F 3 "" H 4200 7400 50  0001 C CNN
 	1    4200 7400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	1050 5950 1050 6150
 $Comp
 L power:PWR_FLAG #FLG0104
 U 1 1 5E988141
@@ -437,8 +405,6 @@ F 3 "~" H 1600 5850 50  0001 C CNN
 $EndComp
 Connection ~ 1600 5850
 Wire Wire Line
-	1600 5850 1850 5850
-Wire Wire Line
 	3550 5850 3500 5850
 Wire Wire Line
 	3500 6400 3500 5850
@@ -448,7 +414,7 @@ Wire Wire Line
 Wire Wire Line
 	3500 6800 3500 6900
 Wire Wire Line
-	3500 7300 3500 7400
+	3500 7300 3500 7350
 Wire Wire Line
 	4200 7300 4200 7400
 Wire Wire Line
@@ -463,7 +429,7 @@ P5V
 Text Label 3200 1150 0    50   ~ 0
 P5V
 Wire Wire Line
-	1050 5850 1600 5850
+	1000 5850 1600 5850
 $Comp
 L dmmt5401:DMMT5401-raspberrypi_hat-powerpiHAT-rescue-powerpiHAT-rescue Q2
 U 1 1 5E9DE6E3
@@ -710,29 +676,6 @@ GPIO26
 Text Label 7050 6200 0    50   ~ 0
 GPIO6
 Wire Wire Line
-	2450 5850 2650 5850
-Connection ~ 2650 5850
-Wire Wire Line
-	2650 5850 3500 5850
-Wire Wire Line
-	2650 6150 2150 6150
-Connection ~ 2150 6150
-Wire Wire Line
-	2150 6150 1600 6150
-$Comp
-L power:GND #PWR0109
-U 1 1 5E98E854
-P 2150 6300
-F 0 "#PWR0109" H 2150 6050 50  0001 C CNN
-F 1 "GND" H 2155 6127 50  0000 C CNN
-F 2 "" H 2150 6300 50  0001 C CNN
-F 3 "" H 2150 6300 50  0001 C CNN
-	1    2150 6300
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2150 6150 2150 6300
-Wire Wire Line
 	4200 6800 4200 6900
 Wire Wire Line
 	3850 6150 4550 6150
@@ -819,17 +762,6 @@ Wire Wire Line
 	2050 4950 2050 5100
 Wire Wire Line
 	2450 4450 2850 4450
-$Comp
-L power:GND #PWR0108
-U 1 1 5E98491B
-P 1050 6150
-F 0 "#PWR0108" H 1050 5900 50  0001 C CNN
-F 1 "GND" H 1055 5977 50  0000 C CNN
-F 2 "" H 1050 6150 50  0001 C CNN
-F 3 "" H 1050 6150 50  0001 C CNN
-	1    1050 6150
-	1    0    0    -1  
-$EndComp
 Text Label 1000 1650 0    50   ~ 0
 GPIO17
 Text Label 2850 4650 0    50   ~ 0
@@ -838,8 +770,8 @@ Text Label 7050 6050 0    50   ~ 0
 GPIO13
 Text Label 7050 6350 0    50   ~ 0
 GPIO17
-Text Label 1050 5850 0    50   ~ 0
-P12V
+Text Label 1000 5850 0    50   ~ 0
+EXT5V
 Text Label 2850 4450 0    50   ~ 0
 ID_SD
 Text Label 2850 4550 0    50   ~ 0
@@ -848,34 +780,34 @@ Text Label 1000 2450 0    50   ~ 0
 ID_SD
 Text Label 3600 2450 0    50   ~ 0
 ID_SC
-Text Label 1050 5950 0    50   ~ 0
-P-12V
+Text Label 1000 5950 0    50   ~ 0
+EXT-5V
 Text Notes 1650 3750 0    138  ~ 28
 HAT EEPROM
 Text Notes 1250 750  0    138  ~ 28
 Raspberry Pi Connector\n
 Text Notes 1300 5550 0    138  ~ 28
-12v Power Source
+External Power Source
 Text Notes 4900 3950 0    138  ~ 28
 Proximity Transponders & Relay Connectors
 $Comp
 L dk_Terminal-Blocks-Wire-to-Board:1935161 J2
 U 1 1 5EB483BA
-P 850 5850
-F 0 "J2" V 625 5933 50  0000 C CNN
-F 1 "1935161" V 716 5933 50  0000 C CNN
-F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-5.0-H_1x02_P5.00mm_Horizontal" H 1050 6050 60  0001 L CNN
-F 3 "https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf" H 1050 6150 60  0001 L CNN
-F 4 "277-1667-ND" H 1050 6250 60  0001 L CNN "Digi-Key_PN"
-F 5 "1935161" H 1050 6350 60  0001 L CNN "MPN"
-F 6 "Connectors, Interconnects" H 1050 6450 60  0001 L CNN "Category"
-F 7 "Terminal Blocks - Wire to Board" H 1050 6550 60  0001 L CNN "Family"
-F 8 "https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf" H 1050 6650 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/phoenix-contact/1935161/277-1667-ND/568614" H 1050 6750 60  0001 L CNN "DK_Detail_Page"
-F 10 "TERM BLK 2POS SIDE ENTRY 5MM PCB" H 1050 6850 60  0001 L CNN "Description"
-F 11 "Phoenix Contact" H 1050 6950 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 1050 7050 60  0001 L CNN "Status"
-	1    850  5850
+P 800 5850
+F 0 "J2" V 575 5933 50  0000 C CNN
+F 1 "1935161" V 666 5933 50  0000 C CNN
+F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-5.0-H_1x02_P5.00mm_Horizontal" H 1000 6050 60  0001 L CNN
+F 3 "https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf" H 1000 6150 60  0001 L CNN
+F 4 "277-1667-ND" H 1000 6250 60  0001 L CNN "Digi-Key_PN"
+F 5 "1935161" H 1000 6350 60  0001 L CNN "MPN"
+F 6 "Connectors, Interconnects" H 1000 6450 60  0001 L CNN "Category"
+F 7 "Terminal Blocks - Wire to Board" H 1000 6550 60  0001 L CNN "Family"
+F 8 "https://media.digikey.com/pdf/Data%20Sheets/Phoenix%20Contact%20PDFs/1935161.pdf" H 1000 6650 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/phoenix-contact/1935161/277-1667-ND/568614" H 1000 6750 60  0001 L CNN "DK_Detail_Page"
+F 10 "TERM BLK 2POS SIDE ENTRY 5MM PCB" H 1000 6850 60  0001 L CNN "Description"
+F 11 "Phoenix Contact" H 1000 6950 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 1000 7050 60  0001 L CNN "Status"
+	1    800  5850
 	0    1    1    0   
 $EndComp
 NoConn ~ 3600 1650
@@ -898,7 +830,7 @@ L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J3
 U 1 1 5EA109B6
 P 5500 4250
 F 0 "J3" V 5275 4258 50  0000 C CNN
-F 1 "B4B-PH-K-S_LF__SN_" V 5366 4258 50  0000 C CNN
+F 1 "Prox 0" V 5366 4258 50  0000 C CNN
 F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 5700 4450 60  0001 L CNN
 F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 5700 4550 60  0001 L CNN
 F 4 "455-1706-ND" H 5700 4650 60  0001 L CNN "Digi-Key_PN"
@@ -918,7 +850,7 @@ L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J4
 U 1 1 5EA18FB2
 P 5500 4850
 F 0 "J4" V 5275 4858 50  0000 C CNN
-F 1 "B4B-PH-K-S_LF__SN_" V 5366 4858 50  0000 C CNN
+F 1 "Prox 1" V 5366 4858 50  0000 C CNN
 F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 5700 5050 60  0001 L CNN
 F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 5700 5150 60  0001 L CNN
 F 4 "455-1706-ND" H 5700 5250 60  0001 L CNN "Digi-Key_PN"
@@ -938,7 +870,7 @@ L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J5
 U 1 1 5EA19951
 P 5500 5450
 F 0 "J5" V 5275 5458 50  0000 C CNN
-F 1 "B4B-PH-K-S_LF__SN_" V 5366 5458 50  0000 C CNN
+F 1 "Prox 2" V 5366 5458 50  0000 C CNN
 F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 5700 5650 60  0001 L CNN
 F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 5700 5750 60  0001 L CNN
 F 4 "455-1706-ND" H 5700 5850 60  0001 L CNN "Digi-Key_PN"
@@ -958,7 +890,7 @@ L dk_Rectangular-Connectors-Headers-Male-Pins:B6B-PH-K-S_LF__SN_ J6
 U 1 1 5EA33896
 P 7450 4250
 F 0 "J6" V 7649 4122 50  0000 R CNN
-F 1 "B6B-PH-K-S_LF__SN_" V 7740 4122 50  0000 R CNN
+F 1 "4 Chan Relay" V 7740 4122 50  0000 R CNN
 F 2 "Connector_JST:JST_PH_B6B-PH-K_1x06_P2.00mm_Vertical" H 7650 4450 60  0001 L CNN
 F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 7650 4550 60  0001 L CNN
 F 4 "455-1708-ND" H 7650 4650 60  0001 L CNN "Digi-Key_PN"
@@ -973,130 +905,352 @@ F 12 "Active" H 7650 5450 60  0001 L CNN "Status"
 	1    7450 4250
 	0    -1   1    0   
 $EndComp
-Wire Wire Line
-	7200 2000 7600 2000
 Text Notes 5400 1750 0    138  ~ 28
 A/D (ADS1115) Connection
-Wire Wire Line
-	7200 2550 7200 2000
 $Comp
 L power:GND #PWR02
 U 1 1 5EA77922
-P 7050 3150
-F 0 "#PWR02" H 7050 2900 50  0001 C CNN
-F 1 "GND" H 7055 2977 50  0001 C CNN
-F 2 "" H 7050 3150 50  0001 C CNN
-F 3 "" H 7050 3150 50  0001 C CNN
-	1    7050 3150
+P 6050 3250
+F 0 "#PWR02" H 6050 3000 50  0001 C CNN
+F 1 "GND" H 6055 3077 50  0001 C CNN
+F 2 "" H 6050 3250 50  0001 C CNN
+F 3 "" H 6050 3250 50  0001 C CNN
+	1    6050 3250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7050 2350 7050 3150
-Connection ~ 7050 2350
+	6050 2450 6050 3250
+Connection ~ 6050 2450
 Wire Wire Line
-	7050 2350 7050 2050
-Text Label 6400 2850 0    50   ~ 0
+	6050 2450 6050 2150
+Text Label 5400 2950 0    50   ~ 0
 A3
-Text Label 6400 2750 0    50   ~ 0
+Text Label 5400 2850 0    50   ~ 0
 A2
-Text Label 6400 2650 0    50   ~ 0
+Text Label 5400 2750 0    50   ~ 0
 A1
-Text Label 6400 2550 0    50   ~ 0
+Text Label 5400 2650 0    50   ~ 0
 A0
-Text Label 6400 2450 0    50   ~ 0
+Text Label 5400 2550 0    50   ~ 0
 ALERT
-Text Label 6400 2050 0    50   ~ 0
+Text Label 5400 2150 0    50   ~ 0
 GND
-Text Label 6400 2350 0    50   ~ 0
+Text Label 5400 2450 0    50   ~ 0
 ADDR
-Text Label 6400 2250 0    50   ~ 0
+Text Label 5400 2350 0    50   ~ 0
 GPIO2_SDA1
-Text Label 6400 2150 0    50   ~ 0
+Text Label 5400 2250 0    50   ~ 0
 GPIO3_SCL1
-Text Label 6400 1950 0    50   ~ 0
+Text Label 5400 2050 0    50   ~ 0
 P3V3_HAT
+NoConn ~ 5400 2550
 Wire Wire Line
-	6400 2550 7200 2550
-NoConn ~ 6400 2450
+	5400 2450 6050 2450
 Wire Wire Line
-	6400 2350 7050 2350
-Wire Wire Line
-	7050 2050 6400 2050
+	6050 2150 5400 2150
 $Comp
 L Connector:Conn_01x10_Male J8
 U 1 1 5EA08AF1
-P 6200 2350
-F 0 "J8" H 6308 2931 50  0000 C CNN
-F 1 "TI ADS1115 Breakout" H 6308 2840 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 6200 2350 50  0001 C CNN
-F 3 "~" H 6200 2350 50  0001 C CNN
-	1    6200 2350
+P 5200 2450
+F 0 "J8" H 5308 3031 50  0000 C CNN
+F 1 "TI ADS1115 Breakout Board" H 5308 2940 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 5200 2450 50  0001 C CNN
+F 3 "~" H 5200 2450 50  0001 C CNN
+	1    5200 2450
 	1    0    0    -1  
 $EndComp
-Text Label 7600 1900 2    50   ~ 0
-P3V3_HAT
 $Comp
-L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J7
+L dk_Rectangular-Connectors-Headers-Male-Pins:B2B-PH-K-S_LF__SN_ J7
 U 1 1 5EAAA21F
-P 7700 1900
-F 0 "J7" V 7799 1772 50  0000 R CNN
-F 1 "B4B-PH-K-S_LF__SN_" V 7890 1772 50  0000 R CNN
-F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 7900 2100 60  0001 L CNN
-F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 7900 2200 60  0001 L CNN
-F 4 "455-1706-ND" H 7900 2300 60  0001 L CNN "Digi-Key_PN"
-F 5 "B4B-PH-K-S(LF)(SN)" H 7900 2400 60  0001 L CNN "MPN"
-F 6 "Connectors, Interconnects" H 7900 2500 60  0001 L CNN "Category"
-F 7 "Rectangular Connectors - Headers, Male Pins" H 7900 2600 60  0001 L CNN "Family"
-F 8 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 7900 2700 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613" H 7900 2800 60  0001 L CNN "DK_Detail_Page"
-F 10 "CONN HEADER VERT 4POS 2MM" H 7900 2900 60  0001 L CNN "Description"
-F 11 "JST Sales America Inc." H 7900 3000 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 7900 3100 60  0001 L CNN "Status"
-	1    7700 1900
+P 8100 2750
+F 0 "J7" V 8199 2622 50  0000 R CNN
+F 1 "Therm 0" V 8290 2622 50  0000 R CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 8300 2950 60  0001 L CNN
+F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 8300 3050 60  0001 L CNN
+F 4 "455-1704-ND" H 8300 3150 60  0001 L CNN "Digi-Key_PN"
+F 5 "B4B-PH-K-S(LF)(SN)" H 8300 3250 60  0001 L CNN "MPN"
+F 6 "Connectors, Interconnects" H 8300 3350 60  0001 L CNN "Category"
+F 7 "Rectangular Connectors - Headers, Male Pins" H 8300 3450 60  0001 L CNN "Family"
+F 8 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 8300 3550 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613" H 8300 3650 60  0001 L CNN "DK_Detail_Page"
+F 10 "CONN HEADER VERT 4POS 2MM" H 8300 3750 60  0001 L CNN "Description"
+F 11 "JST Sales America Inc." H 8300 3850 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 8300 3950 60  0001 L CNN "Status"
+	1    8100 2750
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	1000 5950 1250 5950
+Wire Wire Line
+	1250 5950 1250 6150
+Wire Wire Line
+	1250 6150 1600 6150
+Wire Wire Line
+	1600 5850 3500 5850
+Wire Wire Line
+	1600 6150 2650 6150
+Wire Wire Line
+	2650 6150 2650 7350
+Wire Wire Line
+	2650 7350 3500 7350
+Connection ~ 1600 6150
+Connection ~ 3500 7350
+Wire Wire Line
+	3500 7350 3500 7400
+$Comp
+L Device:R R10
+U 1 1 5EB21AC5
+P 7600 2300
+F 0 "R10" H 7670 2346 50  0000 L CNN
+F 1 "4.7k" H 7670 2255 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7530 2300 50  0001 C CNN
+F 3 "~" H 7600 2300 50  0001 C CNN
+F 4 "RES 4.7K OHM 0.5% 1/8W 0805" H 7600 2300 50  0001 C CNN "Description"
+F 5 "RNCF0805DTE4K70CT-ND" H 7600 2300 50  0001 C CNN "Digi-Key_PN"
+	1    7600 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5EB2F146
+P 7600 2800
+F 0 "C2" H 7715 2846 50  0000 L CNN
+F 1 "10uf" H 7715 2755 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 7638 2650 50  0001 C CNN
+F 3 "~" H 7600 2800 50  0001 C CNN
+F 4 "CAP CER 10UF 10V X5R 0805" H 7600 2800 50  0001 C CNN "Description"
+F 5 "1276-1052-1-ND" H 7600 2800 50  0001 C CNN "Digi-Key_PN"
+	1    7600 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7600 2450 7600 2550
+Wire Wire Line
+	7600 2150 7600 1900
+Wire Wire Line
+	7600 2550 8000 2550
+Wire Wire Line
+	8000 2550 8000 2750
+Connection ~ 7600 2550
+Wire Wire Line
+	7600 2550 7600 2650
+$Comp
+L power:GND #PWR03
+U 1 1 5EB71EDF
+P 7600 3150
+F 0 "#PWR03" H 7600 2900 50  0001 C CNN
+F 1 "GND" H 7605 2977 50  0000 C CNN
+F 2 "" H 7600 3150 50  0001 C CNN
+F 3 "" H 7600 3150 50  0001 C CNN
+	1    7600 3150
+	1    0    0    -1  
+$EndComp
+Text Label 7600 1900 0    50   ~ 0
+P3V3_HAT
+Wire Wire Line
+	7600 2550 7400 2550
+Text Label 7400 2550 0    50   ~ 0
+A1
+Wire Wire Line
+	7600 2950 7600 3000
+Wire Wire Line
+	8000 2850 8000 3000
+Wire Wire Line
+	8000 3000 7600 3000
+Connection ~ 7600 3000
+Wire Wire Line
+	7600 3000 7600 3150
+$Comp
+L dk_Rectangular-Connectors-Headers-Male-Pins:B2B-PH-K-S_LF__SN_ J10
+U 1 1 5EBC712B
+P 9200 2750
+F 0 "J10" V 9299 2622 50  0000 R CNN
+F 1 "Therm 1" V 9390 2622 50  0000 R CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 9400 2950 60  0001 L CNN
+F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 9400 3050 60  0001 L CNN
+F 4 "455-1704-ND" H 9400 3150 60  0001 L CNN "Digi-Key_PN"
+F 5 "B4B-PH-K-S(LF)(SN)" H 9400 3250 60  0001 L CNN "MPN"
+F 6 "Connectors, Interconnects" H 9400 3350 60  0001 L CNN "Category"
+F 7 "Rectangular Connectors - Headers, Male Pins" H 9400 3450 60  0001 L CNN "Family"
+F 8 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 9400 3550 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613" H 9400 3650 60  0001 L CNN "DK_Detail_Page"
+F 10 "CONN HEADER VERT 4POS 2MM" H 9400 3750 60  0001 L CNN "Description"
+F 11 "JST Sales America Inc." H 9400 3850 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 9400 3950 60  0001 L CNN "Status"
+	1    9200 2750
 	0    -1   1    0   
 $EndComp
 $Comp
-L dk_Rectangular-Connectors-Headers-Male-Pins:B4B-PH-K-S_LF__SN_ J9
-U 1 1 5EAABF94
-P 7700 2450
-F 0 "J9" V 7799 2322 50  0000 R CNN
-F 1 "B4B-PH-K-S_LF__SN_" V 7890 2322 50  0000 R CNN
-F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 7900 2650 60  0001 L CNN
-F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 7900 2750 60  0001 L CNN
-F 4 "455-1706-ND" H 7900 2850 60  0001 L CNN "Digi-Key_PN"
-F 5 "B4B-PH-K-S(LF)(SN)" H 7900 2950 60  0001 L CNN "MPN"
-F 6 "Connectors, Interconnects" H 7900 3050 60  0001 L CNN "Category"
-F 7 "Rectangular Connectors - Headers, Male Pins" H 7900 3150 60  0001 L CNN "Family"
-F 8 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 7900 3250 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613" H 7900 3350 60  0001 L CNN "DK_Detail_Page"
-F 10 "CONN HEADER VERT 4POS 2MM" H 7900 3450 60  0001 L CNN "Description"
-F 11 "JST Sales America Inc." H 7900 3550 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 7900 3650 60  0001 L CNN "Status"
-	1    7700 2450
+L Device:R R11
+U 1 1 5EBC7133
+P 8700 2300
+F 0 "R11" H 8770 2346 50  0000 L CNN
+F 1 "4.7k" H 8770 2255 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 8630 2300 50  0001 C CNN
+F 3 "~" H 8700 2300 50  0001 C CNN
+F 4 "RES 4.7K OHM 0.5% 1/8W 0805" H 8700 2300 50  0001 C CNN "Description"
+F 5 "RNCF0805DTE4K70CT-ND" H 8700 2300 50  0001 C CNN "Digi-Key_PN"
+	1    8700 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C3
+U 1 1 5EBC713B
+P 8700 2800
+F 0 "C3" H 8815 2846 50  0000 L CNN
+F 1 "10uf" H 8815 2755 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8738 2650 50  0001 C CNN
+F 3 "~" H 8700 2800 50  0001 C CNN
+F 4 "CAP CER 10UF 10V X5R 0805" H 8700 2800 50  0001 C CNN "Description"
+F 5 "1276-1052-1-ND" H 8700 2800 50  0001 C CNN "Digi-Key_PN"
+	1    8700 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8700 2450 8700 2550
+Wire Wire Line
+	8700 2150 8700 1900
+Wire Wire Line
+	8700 2550 9100 2550
+Wire Wire Line
+	9100 2550 9100 2750
+Connection ~ 8700 2550
+Wire Wire Line
+	8700 2550 8700 2650
+$Comp
+L power:GND #PWR04
+U 1 1 5EBC7147
+P 8700 3150
+F 0 "#PWR04" H 8700 2900 50  0001 C CNN
+F 1 "GND" H 8705 2977 50  0000 C CNN
+F 2 "" H 8700 3150 50  0001 C CNN
+F 3 "" H 8700 3150 50  0001 C CNN
+	1    8700 3150
+	1    0    0    -1  
+$EndComp
+Text Label 8700 1900 0    50   ~ 0
+P3V3_HAT
+Wire Wire Line
+	8700 2550 8500 2550
+Text Label 8500 2550 0    50   ~ 0
+A2
+Wire Wire Line
+	8700 2950 8700 3000
+Wire Wire Line
+	9100 2850 9100 3000
+Wire Wire Line
+	9100 3000 8700 3000
+Connection ~ 8700 3000
+Wire Wire Line
+	8700 3000 8700 3150
+$Comp
+L dk_Rectangular-Connectors-Headers-Male-Pins:B2B-PH-K-S_LF__SN_ J11
+U 1 1 5EBCDD77
+P 10300 2750
+F 0 "J11" V 10399 2622 50  0000 R CNN
+F 1 "Therm 2" V 10490 2622 50  0000 R CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 10500 2950 60  0001 L CNN
+F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 10500 3050 60  0001 L CNN
+F 4 "455-1704-ND" H 10500 3150 60  0001 L CNN "Digi-Key_PN"
+F 5 "B4B-PH-K-S(LF)(SN)" H 10500 3250 60  0001 L CNN "MPN"
+F 6 "Connectors, Interconnects" H 10500 3350 60  0001 L CNN "Category"
+F 7 "Rectangular Connectors - Headers, Male Pins" H 10500 3450 60  0001 L CNN "Family"
+F 8 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 10500 3550 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613" H 10500 3650 60  0001 L CNN "DK_Detail_Page"
+F 10 "CONN HEADER VERT 4POS 2MM" H 10500 3750 60  0001 L CNN "Description"
+F 11 "JST Sales America Inc." H 10500 3850 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 10500 3950 60  0001 L CNN "Status"
+	1    10300 2750
 	0    -1   1    0   
 $EndComp
-Text Label 7600 2450 2    50   ~ 0
+$Comp
+L Device:R R12
+U 1 1 5EBCDD7F
+P 9800 2300
+F 0 "R12" H 9870 2346 50  0000 L CNN
+F 1 "4.7k" H 9870 2255 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 9730 2300 50  0001 C CNN
+F 3 "~" H 9800 2300 50  0001 C CNN
+F 4 "RES 4.7K OHM 0.5% 1/8W 0805" H 9800 2300 50  0001 C CNN "Description"
+F 5 "RNCF0805DTE4K70CT-ND" H 9800 2300 50  0001 C CNN "Digi-Key_PN"
+	1    9800 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 5EBCDD87
+P 9800 2800
+F 0 "C4" H 9915 2846 50  0000 L CNN
+F 1 "10uf" H 9915 2755 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 9838 2650 50  0001 C CNN
+F 3 "~" H 9800 2800 50  0001 C CNN
+F 4 "CAP CER 10UF 10V X5R 0805" H 9800 2800 50  0001 C CNN "Description"
+F 5 "1276-1052-1-ND" H 9800 2800 50  0001 C CNN "Digi-Key_PN"
+	1    9800 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9800 2450 9800 2550
+Wire Wire Line
+	9800 2150 9800 1900
+Wire Wire Line
+	9800 2550 10200 2550
+Wire Wire Line
+	10200 2550 10200 2750
+Connection ~ 9800 2550
+Wire Wire Line
+	9800 2550 9800 2650
+$Comp
+L power:GND #PWR05
+U 1 1 5EBCDD93
+P 9800 3150
+F 0 "#PWR05" H 9800 2900 50  0001 C CNN
+F 1 "GND" H 9805 2977 50  0000 C CNN
+F 2 "" H 9800 3150 50  0001 C CNN
+F 3 "" H 9800 3150 50  0001 C CNN
+	1    9800 3150
+	1    0    0    -1  
+$EndComp
+Text Label 9800 1900 0    50   ~ 0
 P3V3_HAT
-Text Label 7600 2750 2    50   ~ 0
+Wire Wire Line
+	9800 2550 9600 2550
+Text Label 9600 2550 0    50   ~ 0
+A3
+Wire Wire Line
+	9800 2950 9800 3000
+Wire Wire Line
+	10200 2850 10200 3000
+Wire Wire Line
+	10200 3000 9800 3000
+Connection ~ 9800 3000
+Wire Wire Line
+	9800 3000 9800 3150
+$Comp
+L dk_Rectangular-Connectors-Headers-Male-Pins:B3B-PH-K-S_LF__SN_ J9
+U 1 1 5EBECB3E
+P 6750 2700
+F 0 "J9" V 6849 2572 50  0000 R CNN
+F 1 "Analog PH" V 6940 2572 50  0000 R CNN
+F 2 "Connector_JST:JST_PH_B3B-PH-K_1x03_P2.00mm_Vertical" H 6950 2900 60  0001 L CNN
+F 3 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 6950 3000 60  0001 L CNN
+F 4 "455-1705-ND" H 6950 3100 60  0001 L CNN "Digi-Key_PN"
+F 5 "B4B-PH-K-S(LF)(SN)" H 6950 3200 60  0001 L CNN "MPN"
+F 6 "Connectors, Interconnects" H 6950 3300 60  0001 L CNN "Category"
+F 7 "Rectangular Connectors - Headers, Male Pins" H 6950 3400 60  0001 L CNN "Family"
+F 8 "http://www.jst-mfg.com/product/pdf/eng/ePH.pdf" H 6950 3500 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/jst-sales-america-inc/B4B-PH-K-S(LF)(SN)/455-1706-ND/926613" H 6950 3600 60  0001 L CNN "DK_Detail_Page"
+F 10 "CONN HEADER VERT 4POS 2MM" H 6950 3700 60  0001 L CNN "Description"
+F 11 "JST Sales America Inc." H 6950 3800 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 6950 3900 60  0001 L CNN "Status"
+	1    6750 2700
+	0    -1   1    0   
+$EndComp
+Text Label 6600 2700 2    50   ~ 0
 GND
-Text Label 7600 2200 2    50   ~ 0
-GND
-Wire Wire Line
-	7600 2100 7300 2100
-Wire Wire Line
-	7300 2100 7300 2650
-Wire Wire Line
-	7300 2650 6400 2650
-Wire Wire Line
-	6400 2750 7400 2750
-Wire Wire Line
-	7400 2750 7400 2550
-Wire Wire Line
-	7400 2550 7600 2550
-Wire Wire Line
-	7600 2650 7500 2650
-Wire Wire Line
-	7500 2650 7500 2850
-Wire Wire Line
-	7500 2850 6400 2850
+Text Label 6600 2800 2    50   ~ 0
+P3V3_HAT
+Text Label 6600 2900 2    50   ~ 0
+A0
+NoConn ~ 2050 1950
 $EndSCHEMATC
