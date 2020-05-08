@@ -2,6 +2,7 @@ package pidroponics
 
 import (
 	"container/ring"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -41,48 +42,56 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 		return nil, err
 	}
 
-	sensors := make([]Srf04, len(files) - 4)
-	for i, _ := range sensors {
-		devPath := path.Join("/sys/bus/platform/drivers/srf04-gpio", "proximity@" + strconv.Itoa(i))
-
-		// find the iio:deviceX path.
-		// and update devPath.
-		devFiles, err := ioutil.ReadDir(devPath)
-		if err != nil {
-			log.Fatal("Unable to open dev path:", devPath, err)
-		}
-		for _, file := range devFiles {
-			if strings.HasPrefix(file.Name(), "iio:device") {
-				devPath = path.Join(devPath, file.Name())
-				break
+	var sensors []Srf04
+	for _, file := range files {
+		if strings.HasPrefix(file.Name(), "proximity@") {
+			proximityNum, err := strconv.Atoi(file.Name()[len(file.Name()) - 1:])
+			if err != nil {
+				return sensors, err
 			}
-		}
+			devPath := path.Join("/sys/bus/platform/drivers/srf04-gpio", file.Name())
 
-		// Construct the object the right way.
-		s := Srf04 {
-			devDevice: devPath,
-			Name: "",
-			Initialized: false,
-			samples: ring.New(30),
-			readTic: nil,
-			readPath: path.Join(devPath, "in_distance_raw"),
-			readBuf: make([]byte, 4096),
-		}
-		s.EmitterID = &sensors[i]
+			// find the iio:deviceX path.
+			// and update devPath.
+			devFiles, err := ioutil.ReadDir(devPath)
+			if err != nil {
+				log.Fatal("Unable to open dev path:", devPath, err)
+			}
+			for _, file := range devFiles {
+				if strings.HasPrefix(file.Name(), "iio:device") {
+					devPath = path.Join(devPath, file.Name())
+					break
+				}
+			}
 
-		// Initialize the ring with -1 for all the values.
-		n := s.samples.Len()
-		for i := 0; i < n; i++ {
-			s.samples.Value = -1
-			s.samples = s.samples.Next()
-		}
+			// Construct the object the right way.
+			s := Srf04{
+				devDevice:   devPath,
+				Name:        transponderNames[proximityNum],
+				Initialized: false,
+				samples:     ring.New(30),
+				readTic:     readtic,
+				readPath:    path.Join(devPath, "in_distance_raw"),
+				readBuf:     make([]byte, 4096),
+			}
+			s.EmitterID = &s
 
-		err = s.Initialize(transponderNames[i], readtic, i)
-		if err == nil {
-			_, err = s.Read()
-		}
+			// Initialize the ring with -1 for all the values.
+			n := s.samples.Len()
+			for i := 0; i < n; i++ {
+				s.samples.Value = -1
+				s.samples = s.samples.Next()
+			}
 
-		sensors[i] = s
+			// Use the device number as the tick offset
+			err = s.Initialize(proximityNum)
+			if err == nil {
+				_, err = s.Read()
+			}
+
+			fmt.Println("Added srf04: ", s.devDevice)
+			sensors = append(sensors, s)
+		}
 	}
 
 	return sensors, nil
@@ -92,10 +101,7 @@ func (s *Srf04) eventName() string {
 	return s.Name
 }
 
-func (s *Srf04) Initialize(name string, readtic *time.Ticker, tickoffset int) error {
-	s.Name = name
-	s.readTic = readtic
-
+func (s *Srf04) Initialize(tickoffset int) error {
 	_, err := os.Stat(s.readPath)
 	f, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
 	buf := make([]byte, 1)

@@ -1,6 +1,7 @@
 package pidroponics
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -53,6 +54,7 @@ func DetectRelays() ([]Relay, error) {
 				break
 			}
 
+			fmt.Println("Added relay: ", r.devDevice)
 			relays = append(relays, r)
 		}
 	}
