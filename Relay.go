@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -23,18 +24,40 @@ type RelayState struct {
 	Timestamp	int64
 }
 
-func NewRelay(devPath string, Device string)(*Relay, error) {
-	var err error = nil
-
-	r := &Relay{
-		devDevice: devPath,
-		Device: Device,
-		initialized: false,
+func DetectRelays() ([]Relay, error) {
+	basedir := "/sys/bus/platform/drivers/leds-gpio/leds/leds"
+	files, err := ioutil.ReadDir(basedir)
+	if err != nil {
+		return nil, err
 	}
-	r.EmitterID = r
-	err = r.readState()
 
-	return r, err
+	var relays []Relay
+	relayNames := []string{"Lights", "Pump", "Fan", "Valve"}
+
+
+	for _, file := range files {
+		if strings.HasPrefix(file.Name(), "relay") {
+			relayNum, err := strconv.Atoi(file.Name()[len(file.Name()) - 1:])
+			if err != nil {
+				return relays, err
+			}
+
+			r := Relay {
+				devDevice: path.Join(basedir, file.Name()),
+				Device: relayNames[relayNum],
+				initialized: false,
+			}
+			r.EmitterID = &r
+			err = r.readState()
+			if err != nil {
+				break
+			}
+
+			relays = append(relays, r)
+		}
+	}
+
+	return relays, err
 }
 
 func (r *Relay) eventName() string {

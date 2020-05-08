@@ -3,9 +3,12 @@ package pidroponics
 import (
 	"container/ring"
 	"io"
+	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -30,36 +33,62 @@ type Srf04State struct {
 	sum			int
 }
 
-func NewSrf04(devPath string) (*Srf04, error){
-	var err error = nil
+func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
+	transponderNames := []string{"Sump", "Inlet", "Outlet"}
 
-	s := &Srf04 {
-		devDevice: devPath,
-		Name: "",
-		Initialized: false,
-		samples: ring.New(30),
-		readTic: nil,
-		readPath: path.Join(devPath, "in_distance_raw"),
-		readBuf: make([]byte, 4096),
-	}
-	s.EmitterID = s
-
-	// Initialize the ring with -1 for all the values.
-	n := s.samples.Len()
-	for i := 0; i < n; i++ {
-		s.samples.Value = -1
-		s.samples = s.samples.Next()
+	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/srf04-gpio")
+	if err != nil {
+		return nil, err
 	}
 
-	err = s.Initialize("", nil, 0)
-	if err == nil {
-		_, err = s.Read()
+	sensors := make([]Srf04, len(files) - 4)
+	for i, _ := range sensors {
+		devPath := path.Join("/sys/bus/platform/drivers/srf04-gpio", "proximity@" + strconv.Itoa(i))
+
+		// find the iio:deviceX path.
+		// and update devPath.
+		devFiles, err := ioutil.ReadDir(devPath)
+		if err != nil {
+			log.Fatal("Unable to open dev path:", devPath, err)
+		}
+		for _, file := range devFiles {
+			if strings.HasPrefix(file.Name(), "iio:device") {
+				devPath = path.Join(devPath, file.Name())
+				break
+			}
+		}
+
+		// Construct the object the right way.
+		s := Srf04 {
+			devDevice: devPath,
+			Name: "",
+			Initialized: false,
+			samples: ring.New(30),
+			readTic: nil,
+			readPath: path.Join(devPath, "in_distance_raw"),
+			readBuf: make([]byte, 4096),
+		}
+		s.EmitterID = &sensors[i]
+
+		// Initialize the ring with -1 for all the values.
+		n := s.samples.Len()
+		for i := 0; i < n; i++ {
+			s.samples.Value = -1
+			s.samples = s.samples.Next()
+		}
+
+		err = s.Initialize(transponderNames[i], readtic, i)
+		if err == nil {
+			_, err = s.Read()
+		}
+
+		sensors[i] = s
 	}
 
-	return s, err
+	return sensors, nil
 }
 
-func (s *Srf04) eventName() string{
+func (s *Srf04) eventName() string {
 	return s.Name
 }
 

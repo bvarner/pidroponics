@@ -6,14 +6,11 @@ import (
 	"fmt"
 	rice "github.com/GeertJohan/go.rice"
 	"github.com/bvarner/pidroponics"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"path"
 	"regexp"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -21,12 +18,10 @@ var broker *pidroponics.Broker
 
 var handler http.Handler
 
-var relays[4] *pidroponics.Relay
+var transponders[] pidroponics.Srf04
+var relays[] pidroponics.Relay
+
 var relayMatcher = regexp.MustCompile("^/?relays/([0-3])$")
-
-var transponders[3] *pidroponics.Srf04
-
-var adcs[1] *pidroponics.ADS1115
 
 
 func redirectTLS(w http.ResponseWriter, r *http.Request) {
@@ -103,114 +98,29 @@ func main() {
 }
 
 func run() error {
+	var err error = nil
+
 	// Setup the SSE Broker.
 	broker = pidroponics.NewBroker()
 	broker.Start()
 
-	// Detect IIO Devices
-	// /sys/bus/iio/devices/iio:devicen/name
-	//    srf04
-	//    ads1015
 	fmt.Println("Enumerating devices...");
-	files, err := ioutil.ReadDir("/sys/bus/iio/devices")
-	if err != nil {
-		return err
-	}
-
-	transponderIdx := 0
-	adcIdx := 0
-
-	for _, file := range files {
-		if strings.HasPrefix(file.Name(), "iio:device") {
-			devpath := path.Join("/sys/bus/iio/devices", file.Name())
-			devnamepath := path.Join(devpath, "name")
-			devnamebuf, err := ioutil.ReadFile(devnamepath)
-			if err != nil {
-				return err
-			}
-
-			devname := string(devnamebuf)
-			// Convert to string so we're working with proper encoding before we drop the last rune.
-			devname = devname[:len(devname) - 1]
-
-			if devname == "srf04" {
-				fmt.Println("Transponder[", transponderIdx, "] at: ", devpath)
-				transponders[transponderIdx], err = pidroponics.NewSrf04(devpath)
-				if err == nil {
-					transponderIdx++
-				}
-			}
-
-			if devname == "ads1015" {
-				fmt.Println("ADC[", adcIdx, "] at: " + devpath)
-				adcs[adcIdx], err = pidroponics.NewADS1115(devpath)
-				if err != nil {
-					log.Fatal("Error initializing ADC: ", err)
-				}
-				adcIdx++
-			}
-		}
-	}
-
-	// Now that we know how many transponders we have, initialize them with a ticker for polling their state.
-	// TODO: Allow for setting / loading maps for devicenames to functions.
-	// TODO: Allow for setting the polling interval of the transponders.
 	transponderTicker := time.NewTicker(time.Second / 90)
-	for idx, transponder := range transponders {
-		if transponder != nil {
-			if idx == 0 {
-				err = transponder.Initialize("Sump", transponderTicker, 0)
-			}
-			if idx == 1 {
-				err = transponder.Initialize("Inlet", transponderTicker, 1)
-			}
-			if idx == 2 {
-				err = transponder.Initialize("Outlet", transponderTicker, 2)
-			}
-			if err != nil {
-				transponder.Close()
-			}
-		}
-	}
-
-	// Enumerate Relay Devices. Setup Those.
-	// /sys/class/leds/relay0/brightness
-	files, err = ioutil.ReadDir("/sys/class/leds")
+	transponders, err = pidroponics.DetectSrf04(transponderTicker)
 	if err != nil {
-		return err
+		log.Fatal("Failed to initialize transponders: ", err)
 	}
-	for _, file := range files {
-		if strings.HasPrefix(file.Name(), "relay") {
-			devpath := path.Join("/sys/class/leds", file.Name())
-
-			idx, err := strconv.Atoi(file.Name()[len(file.Name()) - 1:])
-			if err != nil {
-				log.Fatal("Unable to determine index of :" + file.Name())
-			}
-			relays[idx], err = pidroponics.NewRelay(devpath, "")
-			if err != nil {
-				log.Fatal("Unable to initialize: " + devpath, err)
-			}
-			relays[idx].AddListener(broker.Outgoing)
-
-			// TODO: Allow for setting / loading maps for devicenames to functions.
-			// for now, we'll just hard-code them.
-			if idx == 0 {
-				relays[idx].Device = "Lights"
-			}
-			if idx == 1 {
-				relays[idx].Device = "Pump"
-			}
-			if idx == 2 {
-				relays[idx].Device = "Fan"
-			}
-			if idx == 3 {
-				relays[idx].Device = "Valve"
-			}
-		}
+	for _, transponder := range transponders {
+		transponder.AddListener(broker.Outgoing)
 	}
 
-	// TODO: Load settings that map Devices -> Functional Names.
+	relays, err = pidroponics.DetectRelays()
+	if err != nil {
+		log.Fatal("Failed to initialize relays: ", err)
+	}
+	for _, relay := range relays {
+		relay.AddListener(broker.Outgoing)
+	}
 
 	// TODO: Setup clock trigger... on clock trigger...
 
