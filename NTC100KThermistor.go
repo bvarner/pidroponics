@@ -192,7 +192,6 @@ func (t *NTC100KThermistor) Read() (float64, error) {
 	// We shouldn't ever get here if we didn't read anything.
 	if bytesRead > 0 { // paranoia
 		val, err := strconv.ParseFloat(string(t.readBuf[:bytesRead-1]), 64)
-		fmt.Println(t.Name, " measured: ", val)
 		if err == nil {
 			t.samples.Value = val
 			t.samples = t.samples.Next()
