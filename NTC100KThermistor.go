@@ -162,6 +162,10 @@ func (t *NTC100KThermistor) GetState() *ThermistorState {
 		state.Temperature = state.sum / float64(state.sampleCount)
 	}
 
+	if math.IsNaN(state.Temperature) {
+		state.Temperature = -999
+	}
+
 	// TODO: Standard Deviation
 
 	return state
