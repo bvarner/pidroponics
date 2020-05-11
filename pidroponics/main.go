@@ -106,13 +106,9 @@ func run() error {
 	broker = pidroponics.NewBroker()
 	broker.Start()
 
-	// Setup the SSE broadcast ticker.
-	broadcastTicker := time.NewTicker(time.Second)
-
-
 	fmt.Println("Enumerating devices...");
 	transponderTicker := time.NewTicker(time.Second / 90)
-	transponders, err = pidroponics.DetectSrf04(transponderTicker, broadcastTicker)
+	transponders, err = pidroponics.DetectSrf04(transponderTicker, time.NewTicker(time.Second))
 	if err != nil {
 		log.Fatal("Failed to initialize transponders: ", err)
 	}
@@ -129,7 +125,7 @@ func run() error {
 	}
 
 	thermistorTicker := time.NewTicker(time.Second / 10)
-	thermistors, err = pidroponics.DetectNTC100KThermistors(thermistorTicker, broadcastTicker)
+	thermistors, err = pidroponics.DetectNTC100KThermistors(thermistorTicker, time.NewTicker(time.Second))
 	if err != nil {
 		log.Fatal("Failed to initialize thermistors: ", err)
 	}
@@ -138,7 +134,7 @@ func run() error {
 	}
 
 	phTicker := time.NewTicker(time.Second / 3)
-	phProbe, err = pidroponics.NewAtlasScientificPhProbe("/sys/bus/platform/drivers/iio_hwmon/pidroponic-hwmon/hwmon/hwmon0/in1_input", phTicker, broadcastTicker)
+	phProbe, err = pidroponics.NewAtlasScientificPhProbe("/sys/bus/platform/drivers/iio_hwmon/pidroponic-hwmon/hwmon/hwmon0/in1_input", phTicker, time.NewTicker(time.Second))
 
 	// TODO: Setup clock trigger... on clock trigger...
 
