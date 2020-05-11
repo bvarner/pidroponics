@@ -14,6 +14,7 @@ type Relay struct {
 	Emitter		`json:"-"`
 	Device		string
 	IsOn		bool
+	Manual		bool
 
 	devDevice	string
 	initialized bool
@@ -22,6 +23,7 @@ type Relay struct {
 type RelayState struct {
 	Device		string
 	IsOn		bool
+	Manual		bool
 	Timestamp	int64
 }
 
@@ -47,6 +49,7 @@ func DetectRelays() ([]Relay, error) {
 				devDevice: path.Join(basedir, file.Name()),
 				Device: relayNames[relayNum],
 				initialized: false,
+				Manual: false,
 			}
 			r.EmitterID = &r
 			err = r.readState()
@@ -98,6 +101,7 @@ func (r *Relay) GetState() RelayState {
 	return RelayState {
 		Device:    r.Device,
 		IsOn:      r.IsOn,
+		Manual:	   r.Manual,
 		Timestamp: time.Now().Unix(),
 	}
 }
@@ -115,4 +119,8 @@ func (r *Relay) SetOn(state bool) error {
 	}
 
 	return err
+}
+
+func (r *Relay) SetManual(manual bool) {
+	r.Manual = manual
 }

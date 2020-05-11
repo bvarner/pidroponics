@@ -160,6 +160,7 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 				err := decoder.Decode(&nr)
 				if err == nil {
 					relays[idx].Device = nr.Device
+					relays[idx].Manual = nr.Manual
 					err = relays[idx].SetOn(nr.IsOn)
 				}
 			}
@@ -190,14 +191,21 @@ func controlLoop(tic *time.Ticker) {
 		hour := tock.Hour()
 		minute := tock.Minute()
 
-		lights.SetOn(hour > 7 && hour < 22) // Lights on from 7AM to 10 PM.
+		if !lights.Manual {
+			lights.SetOn(hour > 7 && hour < 22) // Lights on from 7AM to 10 PM.
+		}
 
+		// TODO: Calibration
 		// TODO: Check proximity sensors to determine if pump should be able to be turned on.
 		// TODO: Involve inlet & outlet temperature readings in pump & fan decisions.
-		pump.SetOn((minute < 15) || (minute > 20 && minute < 35) || (minute > 40 && minute < 55)) // On 15 minutes off 5.
-		valve.SetOn(pump.IsOn)
+		if !pump.Manual {
+			pump.SetOn((minute < 15) || (minute > 20 && minute < 35) || (minute > 40 && minute < 55)) // On 15 minutes off 5.
+			valve.SetOn(pump.IsOn)
+		}
 
-		fan.SetOn(ambientTemp.GetState().Temperature > 26) // Anything over 26c (~80f)
+		if !fan.Manual {
+			fan.SetOn(ambientTemp.GetState().Temperature > 26) // Anything over 26c (~80f)
+		}
 	}
 }
 
