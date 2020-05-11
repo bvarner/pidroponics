@@ -32,7 +32,7 @@ type PhProbeState struct {
 
 // Creates a new AtlasScientificPhProbe from the given ADC Channel.
 // This essentially creates a user-space driver.
-func NewAtlasScientificPhProbe(readPath string, readTic *time.Ticker, emitTic *time.Ticker) (AtlasScientificPhProbe, error) {
+func NewAtlasScientificPhProbe(readPath string, readTic *time.Ticker) (AtlasScientificPhProbe, error) {
 	var err error = nil
 
 	p := AtlasScientificPhProbe{
@@ -42,7 +42,7 @@ func NewAtlasScientificPhProbe(readPath string, readTic *time.Ticker, emitTic *t
 		readFile:    nil,
 		readTic:     readTic,
 		samples:     ring.New(3),
-		emitTic:	 emitTic,
+		emitTic:	 time.NewTicker(time.Second),
 	}
 	p.EmitterID = &p
 
@@ -96,6 +96,7 @@ func (p *AtlasScientificPhProbe) Close() error {
 		err = p.readFile.Close()
 		p.readFile = nil
 		p.Initialized = false
+		p.emitTic.Stop()
 	}
 	return err
 }

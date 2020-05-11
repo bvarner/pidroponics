@@ -37,7 +37,7 @@ type ThermistorState struct {
 	sum			float64
 }
 
-func DetectNTC100KThermistors(readtic *time.Ticker, emittic *time.Ticker) ([]NTC100KThermistor, error) {
+func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error) {
 	thermistorNames := []string{"sump_temp", "inlet_temp", "ambient_temp"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/ntc-thermistor")
@@ -76,7 +76,7 @@ func DetectNTC100KThermistors(readtic *time.Ticker, emittic *time.Ticker) ([]NTC
 				readFile:		nil,
 				readTic:		readtic,
 				samples:		ring.New(10),
-				emitTic: 		emittic,
+				emitTic: 		time.NewTicker(time.Second),
 			}
 			t.EmitterID = &t
 
@@ -132,6 +132,7 @@ func (t *NTC100KThermistor) Close() error {
 		err = t.readFile.Close()
 		t.readFile = nil
 		t.Initialized = false
+		t.emitTic.Stop()
 	}
 	return err
 }

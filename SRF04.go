@@ -38,7 +38,7 @@ type Srf04State struct {
 	sum			int
 }
 
-func DetectSrf04(readtic *time.Ticker, emittic *time.Ticker) ([]Srf04, error) {
+func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 	transponderNames := []string{"sump_water_level", "inlet_water_level", "outlet_water_level"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/srf04-gpio")
@@ -77,7 +77,7 @@ func DetectSrf04(readtic *time.Ticker, emittic *time.Ticker) ([]Srf04, error) {
 				readTic:     readtic,
 				readPath:    path.Join(devPath, "in_distance_raw"),
 				readBuf:     make([]byte, 4096),
-				emitTic:     emittic,
+				emitTic:     time.NewTicker(time.Second),
 			}
 			s.EmitterID = &s
 
@@ -142,6 +142,7 @@ func (s *Srf04) Close() error {
 		err = s.readFile.Close()
 		s.readFile = nil
 		s.Initialized = false
+		s.emitTic.Stop()
 	}
 	return err
 }
