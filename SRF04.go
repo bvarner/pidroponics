@@ -222,6 +222,7 @@ func (s *Srf04) Read() (int, error) {
 			s.samples = s.samples.Next()
 		}
 		// TODO: Use a different ticker for this.
+		// This will be too high-rate at 90 samples / second.
 		go func() {s.Emit(s.GetState())}()
 		return val, err
 	}

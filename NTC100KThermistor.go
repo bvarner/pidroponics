@@ -3,6 +3,7 @@ package pidroponics
 import (
 	"container/ring"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"math"
@@ -30,7 +31,7 @@ type ThermistorState struct {
 	Temperature float64
 	Timestamp	int64
 	sampleCount	int
-	sum			int
+	sum			float64
 }
 
 func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error) {
@@ -126,16 +127,80 @@ func (t *NTC100KThermistor) Close() error {
 }
 
 func (t *NTC100KThermistor) GetState() *ThermistorState {
-	// TODO: Implement
-	return nil
+	state := &ThermistorState{
+		Name:        t.Name,
+		Temperature: math.NaN(),
+		Timestamp:   time.Now().Unix(),
+		sampleCount: 0,
+		sum:         0,
+	}
+
+	// Add up the samples
+	t.samples.Do(func(v interface{}) {
+		val := v.(float64)
+		if val != math.NaN() {
+			state.sampleCount++
+			state.sum += val
+		}
+	})
+
+	// Do the division.
+	if state.sampleCount > 0 {
+		state.Temperature = state.sum / float64(state.sampleCount)
+	}
+
+	// TODO: Standard Deviation
+
+	return state
 }
 
 func (t *NTC100KThermistor) tickerRead() {
-	// TODO: implement
-	return
+	if t.readTic != nil {
+		for range t.readTic.C {
+			if !t.Initialized {
+				break
+			}
+			t.Read()
+		}
+	}
 }
 
 func (t *NTC100KThermistor) Read() (float64, error) {
-	// TODO: implement
-	return 0, nil
+	// Seek should tell us the new offset (0) and no err.
+	bytesRead := 0
+	_, err := t.readFile.Seek(0, 0)
+
+	// Loop until N > 0 AND err != EOF && err != timeout.
+	if err == nil {
+		n := 0
+		for {
+			n, err = t.readFile.Read(t.readBuf)
+			bytesRead += n
+			if os.IsTimeout(err) {
+				// bail out.
+				bytesRead = 0
+				break
+			}
+			if err == io.EOF {
+				// Success!
+				break
+			}
+			// Any other err means 'keep trying to read.'
+		}
+	}
+
+	// We shouldn't ever get here if we didn't read anything.
+	if bytesRead > 0 { // paranoia
+		val, err := strconv.ParseFloat(string(t.readBuf[:bytesRead-1]), 64)
+		fmt.Println(t.Name, " measured: ", val)
+		if err == nil {
+			t.samples.Value = val
+			t.samples = t.samples.Next()
+		}
+		// TODO: Use a different ticker for this.
+		go func() {t.Emit(t.GetState())}()
+		return val, err
+	}
+
+	return 0, err
 }
