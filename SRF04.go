@@ -39,7 +39,7 @@ type Srf04State struct {
 }
 
 func DetectSrf04(readtic *time.Ticker, emittic *time.Ticker) ([]Srf04, error) {
-	transponderNames := []string{"Sump", "Inlet", "Outlet"}
+	transponderNames := []string{"sump_water_level", "inlet_water_level", "outlet_water_level"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/srf04-gpio")
 	if err != nil {

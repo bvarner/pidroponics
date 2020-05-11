@@ -38,7 +38,7 @@ type ThermistorState struct {
 }
 
 func DetectNTC100KThermistors(readtic *time.Ticker, emittic *time.Ticker) ([]NTC100KThermistor, error) {
-	thermistorNames := []string{"Sump", "Inlet", "Ambient"}
+	thermistorNames := []string{"sump_temp", "inlet_temp", "ambient_temp"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/ntc-thermistor")
 	if err != nil {

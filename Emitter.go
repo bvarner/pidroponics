@@ -42,6 +42,6 @@ func (e *Emitter) Emit(v interface{}) {
 			}(handler)
 		}
 	} else {
-		fmt.Println("error: ", err)
+		fmt.Println("error serializing: ", e.eventName(), " :", err)
 	}
 }
