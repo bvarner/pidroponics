@@ -23,7 +23,9 @@ var relays[] pidroponics.Relay
 var thermistors[] pidroponics.NTC100KThermistor
 var phProbe pidroponics.AtlasScientificPhProbe
 
-var relayMatcher = regexp.MustCompile("^/?relays/([0-3])$")
+var relayURIMatcher = regexp.MustCompile("^/?relays/([0-3])$")
+var transponderURIMatcher = regexp.MustCompile("^/?waterlevels/([0-2])$")
+var thermistorURIMatcher = regexp.MustCompile("^/?temperatures/([0-2])$")
 
 
 func redirectTLS(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +46,90 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 	handler.ServeHTTP(w, r)
 }
 
+func PhControl(w http.ResponseWriter, r *http.Request) {
+	var err error = nil
+
+	if r.Method == "GET" {
+		err = json.NewEncoder(w).Encode(phProbe.GetState())
+	} else {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte(http.StatusText(http.StatusMethodNotAllowed)))
+	}
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func WaterLevelControl(w http.ResponseWriter, r *http.Request) {
+	var err error = nil
+
+	if r.Method == "GET" {
+		if matched, _ := regexp.MatchString("^.waterlevels/?$", r.URL.Path); matched {
+			// Dump the whole shebang.
+			err = json.NewEncoder(w).Encode(transponders)
+		} else {
+			// look for an individual...
+			matches := transponderURIMatcher.FindStringSubmatch(r.URL.Path)
+			if len(matches) == 2 {
+				idx, err := strconv.Atoi(matches[1])
+				if err == nil {
+					err = json.NewEncoder(w).Encode(transponders[idx].GetState())
+				}
+			} else {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(http.StatusText(http.StatusBadRequest)))
+			}
+		}
+	} else {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte(http.StatusText(http.StatusMethodNotAllowed)))
+	}
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func TempControl(w http.ResponseWriter, r *http.Request) {
+	var err error = nil
+
+	if r.Method == "GET" {
+		if matched, _ := regexp.MatchString("^.temperatures/?$", r.URL.Path); matched {
+			// Dump the whole shebang.
+			err = json.NewEncoder(w).Encode(thermistors)
+		} else {
+			// look for an individual...
+			matches := thermistorURIMatcher.FindStringSubmatch(r.URL.Path)
+			if len(matches) == 2 {
+				idx, err := strconv.Atoi(matches[1])
+				if err == nil {
+					err = json.NewEncoder(w).Encode(thermistors[idx].GetState())
+				}
+			} else {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(http.StatusText(http.StatusBadRequest)))
+			}
+		}
+	} else {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte(http.StatusText(http.StatusMethodNotAllowed)))
+	}
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
 func RelayControl(w http.ResponseWriter, r *http.Request) {
 	var err error = nil
 
@@ -54,7 +140,7 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 			// dump the whole shebang.
 			err = json.NewEncoder(w).Encode(relays)
 		} else {
-			matches := relayMatcher.FindStringSubmatch(r.URL.Path)
+			matches := relayURIMatcher.FindStringSubmatch(r.URL.Path)
 			if len(matches) == 2 {
 				idx, err := strconv.Atoi(matches[1])
 				if err == nil {
@@ -62,11 +148,11 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 				}
 			} else {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("400 - Bad Request"))
+				w.Write([]byte(http.StatusText(http.StatusBadRequest)))
 			}
 		}
 	} else if r.Method == "PUT" {
-		if matches := relayMatcher.FindStringSubmatch(r.URL.Path); len(matches) == 2 {
+		if matches := relayURIMatcher.FindStringSubmatch(r.URL.Path); len(matches) == 2 {
 			idx, err := strconv.Atoi(matches[1])
 			if err == nil {
 				decoder := json.NewDecoder(r.Body)
@@ -80,7 +166,7 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("500 - Method Not Supported"))
+		w.Write([]byte(http.StatusText(http.StatusMethodNotAllowed)))
 	}
 
 	if err != nil {
@@ -154,6 +240,13 @@ func run() error {
 	http.HandleFunc("/relays", RelayControl)
 	http.HandleFunc("/relays/", RelayControl)
 
+	http.HandleFunc("/temperatures", TempControl)
+	http.HandleFunc("/temperatures/", TempControl)
+
+	http.HandleFunc("/waterlevels", WaterLevelControl)
+	http.HandleFunc("/waterlevels/", WaterLevelControl)
+
+	http.HandleFunc("/ph", PhControl)
 
 	cert := flag.String("cert", "/etc/ssl/certs/pidroponics.pem", "The certificate for this server.")
 	certkey := flag.String("key", "/etc/ssl/certs/pidroponics-key.pem", "The key for the server cert.")
