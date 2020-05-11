@@ -177,12 +177,29 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Main state machine control loop.
 func controlLoop(tic *time.Ticker) {
+	lights := relays[0]
+	pump   := relays[1]
+	fan    := relays[2]
+	valve  := relays[3]
+
+	ambientTemp := thermistors[2]
+
 	for tock := range tic.C {
-		fmt.Println(tock)
+		hour := tock.Hour()
+		minute := tock.Minute()
+
+		lights.SetOn(hour > 7 && hour < 22) // Lights on from 7AM to 10 PM.
+
+		// TODO: Check proximity sensors to determine if pump should be able to be turned on.
+		// TODO: Involve inlet & outlet temperature readings in pump & fan decisions.
+		pump.SetOn((minute < 15) || (minute > 20 && minute < 35) || (minute > 40 && minute < 55)) // On 15 minutes off 5.
+		valve.SetOn(pump.IsOn)
+
+		fan.SetOn(ambientTemp.GetState().Temperature > 26) // Anything over 26c (~80f)
 	}
 }
-
 
 func main() {
 	if err := run(); err != nil {
