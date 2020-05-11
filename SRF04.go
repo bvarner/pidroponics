@@ -10,6 +10,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -23,7 +24,10 @@ type Srf04 struct {
 	readBuf		[]byte
 	readFile	*os.File
 	readTic		*time.Ticker
+	sampleLock	sync.Mutex
 	samples		*ring.Ring
+
+	emitTic		*time.Ticker
 }
 
 type Srf04State struct {
@@ -34,7 +38,7 @@ type Srf04State struct {
 	sum			int
 }
 
-func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
+func DetectSrf04(readtic *time.Ticker, emittic *time.Ticker) ([]Srf04, error) {
 	transponderNames := []string{"Sump", "Inlet", "Outlet"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/srf04-gpio")
@@ -45,7 +49,7 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 	var sensors []Srf04
 	for _, file := range files {
 		if strings.HasPrefix(file.Name(), "proximity@") {
-			proximityNum, err := strconv.Atoi(file.Name()[len(file.Name()) - 1:])
+			proximityNum, err := strconv.Atoi(file.Name()[len(file.Name())-1:])
 			if err != nil {
 				return sensors, err
 			}
@@ -73,15 +77,18 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 				readTic:     readtic,
 				readPath:    path.Join(devPath, "in_distance_raw"),
 				readBuf:     make([]byte, 4096),
+				emitTic:     emittic,
 			}
 			s.EmitterID = &s
 
 			// Initialize the ring with -1 for all the values.
+			s.sampleLock.Lock()
 			n := s.samples.Len()
 			for i := 0; i < n; i++ {
 				s.samples.Value = -1
 				s.samples = s.samples.Next()
 			}
+			s.sampleLock.Unlock()
 
 			// Use the device number as the tick offset
 			err = s.Initialize(proximityNum)
@@ -89,7 +96,10 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 				_, err = s.Read()
 			}
 
+			// Start the emitter
+			go s.emitLoop()
 			fmt.Println("Added srf04: ", s.devDevice)
+
 			sensors = append(sensors, s)
 		}
 	}
@@ -127,10 +137,13 @@ func (s *Srf04) Initialize(tickoffset int) error {
 }
 
 func (s *Srf04) Close() error {
+	var err error = nil
 	if s.readFile != nil {
-		return s.readFile.Close()
+		err = s.readFile.Close()
+		s.readFile = nil
+		s.Initialized = false
 	}
-	return nil
+	return err
 }
 
 func (s *Srf04) GetState() *Srf04State {
@@ -143,6 +156,8 @@ func (s *Srf04) GetState() *Srf04State {
 	}
 
 	// Add them up
+	s.sampleLock.Lock()
+	defer s.sampleLock.Unlock()
 	s.samples.Do(func(v interface{}) {
 		val := v.(int)
 		if val > 0 {
@@ -173,6 +188,14 @@ func (s *Srf04) tickerRead(tickoffset int) {
 				count = 3
 			}
 			count--
+		}
+	}
+}
+
+func (s *Srf04) emitLoop() {
+	for range s.emitTic.C {
+		if s.Initialized {
+			go func() {s.Emit(s.GetState())}()
 		}
 	}
 }
@@ -218,12 +241,11 @@ func (s *Srf04) Read() (int, error) {
 	if bytesRead > 0 { // paranoia
 		val, err := strconv.Atoi(string(s.readBuf[:bytesRead-1]))
 		if err == nil {
+			s.sampleLock.Lock()
+			defer s.sampleLock.Unlock()
 			s.samples.Value = val
 			s.samples = s.samples.Next()
 		}
-		// TODO: Use a different ticker for this.
-		// This will be too high-rate at 90 samples / second.
-		go func() {s.Emit(s.GetState())}()
 		return val, err
 	}
 

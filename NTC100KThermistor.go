@@ -11,6 +11,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -24,6 +25,8 @@ type NTC100KThermistor struct {
 	readFile	*os.File
 	readTic		*time.Ticker
 	samples		*ring.Ring
+	sampleLock	sync.Mutex
+	emitTic 	*time.Ticker
 }
 
 type ThermistorState struct {
@@ -34,7 +37,7 @@ type ThermistorState struct {
 	sum			float64
 }
 
-func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error) {
+func DetectNTC100KThermistors(readtic *time.Ticker, emittic *time.Ticker) ([]NTC100KThermistor, error) {
 	thermistorNames := []string{"Sump", "Inlet", "Ambient"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/ntc-thermistor")
@@ -73,21 +76,25 @@ func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error)
 				readFile:		nil,
 				readTic:		readtic,
 				samples:		ring.New(10),
+				emitTic: 		emittic,
 			}
 			t.EmitterID = &t
 
 			// Initialize samples to NaN, a float64.
+			t.sampleLock.Lock()
 			n := t.samples.Len()
 			for i := 0; i < n; i++ {
 				t.samples.Value = math.NaN()
 				t.samples = t.samples.Next()
 			}
+			t.sampleLock.Unlock()
 
 			err = t.Initialize()
 			if err == nil {
 				_, err = t.Read()
 			}
 
+			go t.emitLoop()
 			fmt.Println("Added NTC100kThermistor: ", t.readPath)
 			thermistors = append(thermistors, t)
 		}
@@ -120,10 +127,13 @@ func (t *NTC100KThermistor) Initialize() error {
 }
 
 func (t *NTC100KThermistor) Close() error {
+	var err error = nil
 	if t.readFile != nil {
-		t.readFile.Close()
+		err = t.readFile.Close()
+		t.readFile = nil
+		t.Initialized = false
 	}
-	return nil
+	return err
 }
 
 func (t *NTC100KThermistor) GetState() *ThermistorState {
@@ -136,6 +146,8 @@ func (t *NTC100KThermistor) GetState() *ThermistorState {
 	}
 
 	// Add up the samples
+	t.sampleLock.Lock()
+	defer t.sampleLock.Unlock()
 	t.samples.Do(func(v interface{}) {
 		val := v.(float64)
 		if val != math.NaN() {
@@ -161,6 +173,14 @@ func (t *NTC100KThermistor) tickerRead() {
 				break
 			}
 			t.Read()
+		}
+	}
+}
+
+func (t *NTC100KThermistor) emitLoop() {
+	for range t.emitTic.C {
+		if t.Initialized {
+			go func() {t.Emit(t.GetState())}()
 		}
 	}
 }
@@ -193,11 +213,11 @@ func (t *NTC100KThermistor) Read() (float64, error) {
 	if bytesRead > 0 { // paranoia
 		val, err := strconv.ParseFloat(string(t.readBuf[:bytesRead-1]), 64)
 		if err == nil {
+			t.sampleLock.Lock()
+			defer t.sampleLock.Unlock()
 			t.samples.Value = val
 			t.samples = t.samples.Next()
 		}
-		// TODO: Use a different ticker for this.
-		go func() {t.Emit(t.GetState())}()
 		return val, err
 	}
 

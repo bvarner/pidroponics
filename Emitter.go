@@ -33,6 +33,8 @@ func (e *Emitter) RemoveListener(event string, ch chan string) {
 func (e *Emitter) Emit(v interface{}) {
 	b, err := json.Marshal(v)
 	if err == nil {
+		// TODO: Remove after debugging.
+		fmt.Println(fmt.Sprintf("event: %s\ndata: %s\n", e.eventName(), string(b)))
 		for _, handler := range e.listeners {
 			s := fmt.Sprintf("event: %s\ndata: %s\n", e.eventName(), string(b))
 			go func(handler chan string) {
