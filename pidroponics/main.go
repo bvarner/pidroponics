@@ -18,8 +18,8 @@ var broker *pidroponics.Broker
 
 var handler http.Handler
 
-var transponders[] pidroponics.Srf04
 var relays[] pidroponics.Relay
+var transponders[] pidroponics.Srf04
 var thermistors[] pidroponics.NTC100KThermistor
 var phProbe pidroponics.AtlasScientificPhProbe
 
@@ -177,6 +177,12 @@ func RelayControl(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func controlLoop(tic *time.Ticker) {
+	for tock := range tic.C {
+		fmt.Println(tock)
+	}
+}
+
 
 func main() {
 	if err := run(); err != nil {
@@ -222,9 +228,8 @@ func run() error {
 	phTicker := time.NewTicker(time.Second / 3)
 	phProbe, err = pidroponics.NewAtlasScientificPhProbe("/sys/bus/platform/drivers/iio_hwmon/pidroponic-hwmon/hwmon/hwmon0/in1_input", phTicker)
 
-	// TODO: Setup clock trigger... on clock trigger...
-
-	// TODO: Check current clock time. Compare to desired device states.
+	stateTicker := time.NewTicker(time.Second)
+	go controlLoop(stateTicker)
 
 	fmt.Println("Setting up HTTP server...")
 
