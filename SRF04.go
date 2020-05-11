@@ -20,10 +20,10 @@ type Srf04 struct {
 
 	devDevice	string
 	readPath    string
-	readBuf		[]byte `json:"-"`
-	readFile	*os.File `json:"-"`
-	readTic		*time.Ticker `json:"-"`
-	samples		*ring.Ring `json:"-"`
+	readBuf		[]byte
+	readFile	*os.File
+	readTic		*time.Ticker
+	samples		*ring.Ring
 }
 
 type Srf04State struct {
@@ -102,6 +102,7 @@ func (s *Srf04) eventName() string {
 }
 
 func (s *Srf04) Initialize(tickoffset int) error {
+	// TODO: Check if this stat is necessary.
 	_, err := os.Stat(s.readPath)
 	f, err := os.OpenFile(s.readPath, os.O_RDONLY, os.ModeDevice)
 	buf := make([]byte, 1)

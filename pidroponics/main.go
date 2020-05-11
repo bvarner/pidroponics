@@ -20,6 +20,7 @@ var handler http.Handler
 
 var transponders[] pidroponics.Srf04
 var relays[] pidroponics.Relay
+var thermistors[] pidroponics.NTC100KThermistor
 
 var relayMatcher = regexp.MustCompile("^/?relays/([0-3])$")
 
@@ -121,6 +122,16 @@ func run() error {
 	for _, relay := range relays {
 		relay.AddListener(broker.Outgoing)
 	}
+
+	thermistorTicker := time.NewTicker(time.Second / 10)
+	thermistors, err = pidroponics.DetectNTC100KThermistors(thermistorTicker)
+	if err != nil {
+		log.Fatal("Failed to initialize thermistors: ", err)
+	}
+	for _, thermistor := range thermistors {
+		thermistor.AddListener(broker.Outgoing)
+	}
+
 
 	// TODO: Setup clock trigger... on clock trigger...
 
