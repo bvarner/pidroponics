@@ -220,7 +220,7 @@ func (t *NTC100KThermistor) Read() (float64, error) {
 		if err == nil {
 			t.sampleLock.Lock()
 			defer t.sampleLock.Unlock()
-			t.samples.Value = val
+			t.samples.Value = val / 1000 // The value from the device is degrees celcius * 1000, to avoid decimal places.
 			t.samples = t.samples.Next()
 		}
 		return val, err
