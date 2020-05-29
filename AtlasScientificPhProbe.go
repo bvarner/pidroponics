@@ -175,7 +175,7 @@ func (p *AtlasScientificPhProbe) Read() (float32, error) {
 	if bytesRead > 0 { // paranoia
 		val, err := strconv.ParseFloat(string(p.readBuf[:bytesRead-1]), 32)
 		if err == nil {
-			val = (-5.6548 * val) + 15.509
+			val = (-5.6548 * val) + 15.509 // Per the Atlas Scientific conversion data.
 
 			p.sampleLock.Lock()
 			defer p.sampleLock.Unlock()
