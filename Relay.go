@@ -11,10 +11,11 @@ import (
 )
 
 type Relay struct {
-	Emitter		`json:"-"`
-	Device		string
-	IsOn		bool
-	Manual		bool
+	Emitter `json:"-"`
+	Device  string
+	IsOn    bool
+	toggled  time.Time
+	Manual  bool
 
 	devDevice	string
 	initialized bool
@@ -79,6 +80,7 @@ func (r *Relay) readState() error {
 		return err
 	}
 	r.IsOn = brightness > 0
+	r.toggled = time.Now()
 	r.initialized = true
 
 	return nil
@@ -109,13 +111,15 @@ func (r *Relay) GetState() RelayState {
 func (r *Relay) SetOn(state bool) error {
 	var err error = nil
 
-	change := r.initialized && r.IsOn != state
+	// Only change if we're initialized and different than the current state, and have been set longer than 2 seconds.
+	change := r.initialized && r.IsOn != state && time.Now().Sub(r.toggled).Seconds() > 2
+	if change {
+		r.IsOn = state
+		err = r.writeState()
 
-	r.IsOn = state
-	err = r.writeState()
-
-	if err == nil && change {
-		r.Emit(r.GetState())
+		if err == nil {
+			r.Emit(r.GetState())
+		}
 	}
 
 	return err
