@@ -12,6 +12,9 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var broker *pidroponics.Broker
@@ -26,7 +29,6 @@ var phProbe pidroponics.AtlasScientificPhProbe
 var relayURIMatcher = regexp.MustCompile("^/?relays/([0-3])$")
 var transponderURIMatcher = regexp.MustCompile("^/?waterlevels/([0-2])$")
 var thermistorURIMatcher = regexp.MustCompile("^/?temperatures/([0-2])$")
-
 
 func redirectTLS(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://" + r.Host + r.RequestURI, http.StatusMovedPermanently)
@@ -277,6 +279,8 @@ func run() error {
 	http.HandleFunc("/waterlevels/", WaterLevelControl)
 
 	http.HandleFunc("/ph", PhControl)
+
+	http.Handle("/metrics", promhttp.Handler())
 
 	cert := flag.String("cert", "/etc/ssl/certs/pidroponics.pem", "The certificate for this server.")
 	certkey := flag.String("key", "/etc/ssl/certs/pidroponics-key.pem", "The key for the server cert.")
