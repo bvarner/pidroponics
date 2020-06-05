@@ -2,6 +2,8 @@ package pidroponics
 
 import (
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"io/ioutil"
 	"os"
 	"path"
@@ -12,6 +14,7 @@ import (
 
 type Relay struct {
 	Emitter `json:"-"`
+	gauge	prometheus.Gauge
 	Device  string
 	IsOn    bool
 	toggled  time.Time
@@ -46,11 +49,17 @@ func DetectRelays() ([]Relay, error) {
 				return relays, err
 			}
 
-			r := Relay {
+			var r = Relay{
 				devDevice: path.Join(basedir, file.Name()),
-				Device: relayNames[relayNum],
+				gauge: promauto.NewGauge(prometheus.GaugeOpts{
+					Namespace:   "pidroponics",
+					Subsystem:   "relay",
+					Name:        relayNames[relayNum] + "_value",
+					Help:        "State of a Relay. 0 = off, 1 = on",
+				}),
+				Device:      relayNames[relayNum],
 				initialized: false,
-				Manual: false,
+				Manual:      false,
 			}
 			r.EmitterID = &r
 			err = r.readState()
@@ -81,6 +90,11 @@ func (r *Relay) readState() error {
 	}
 	r.IsOn = brightness > 0
 	r.toggled = time.Now()
+	if r.IsOn {
+		r.gauge.Set(1)
+	} else {
+		r.gauge.Set(0)
+	}
 	r.initialized = true
 
 	return nil
@@ -118,6 +132,11 @@ func (r *Relay) SetOn(state bool) error {
 		err = r.writeState()
 
 		if err == nil {
+			if r.IsOn {
+				r.gauge.Set(1)
+			} else {
+				r.gauge.Set(0)
+			}
 			r.Emit(r.GetState())
 		}
 	}
