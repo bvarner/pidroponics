@@ -3,6 +3,8 @@ package pidroponics
 import (
 	"container/ring"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"io"
 	"os"
 	"strconv"
@@ -13,6 +15,7 @@ import (
 type AtlasScientificPhProbe struct {
 	Emitter 	`json:"="`
 	Initialized bool
+	gauge		prometheus.Gauge
 
 	readPath	string
 	readBuf		[]byte
@@ -24,10 +27,10 @@ type AtlasScientificPhProbe struct {
 }
 
 type PhProbeState struct {
-	Ph 			float32
+	Ph 			float64
 	Timestamp   int64
 	sampleCount	int
-	sum			float32
+	sum			float64
 }
 
 // Creates a new AtlasScientificPhProbe from the given ADC Channel.
@@ -37,6 +40,12 @@ func NewAtlasScientificPhProbe(readPath string, readTic *time.Ticker) (AtlasScie
 
 	p := AtlasScientificPhProbe{
 		Initialized: false,
+		gauge: promauto.NewGauge(prometheus.GaugeOpts{
+			Namespace:   "pidroponics",
+			Subsystem:   "sump",
+			Name:        "pH",
+			Help:        "Sump water pH",
+		}),
 		readPath:    readPath,
 		readBuf:     make([]byte, 4096),
 		readFile:    nil,
@@ -50,7 +59,7 @@ func NewAtlasScientificPhProbe(readPath string, readTic *time.Ticker) (AtlasScie
 	p.sampleLock.Lock()
 	n := p.samples.Len()
 	for i := 0; i < n; i++ {
-		p.samples.Value = float32(-1)
+		p.samples.Value = float64(-1)
 		p.samples = p.samples.Next()
 	}
 	p.sampleLock.Unlock()
@@ -113,7 +122,7 @@ func (p *AtlasScientificPhProbe) GetState() *PhProbeState {
 	p.sampleLock.Lock()
 	defer p.sampleLock.Unlock()
 	p.samples.Do(func(v interface{}) {
-		val := v.(float32)
+		val := v.(float64)
 		if val > 0 {
 			state.sampleCount++
 			state.sum += val
@@ -122,7 +131,7 @@ func (p *AtlasScientificPhProbe) GetState() *PhProbeState {
 
 	// Do the division
 	if state.sampleCount > 0 {
-		state.Ph = state.sum / float32(state.sampleCount)
+		state.Ph = state.sum / float64(state.sampleCount)
 	}
 
 	// TODO: Standard Deviation
@@ -143,12 +152,16 @@ func (p *AtlasScientificPhProbe) tickerRead() {
 func (p *AtlasScientificPhProbe) emitLoop() {
 	for range p.emitTic.C {
 		if p.Initialized {
-			go func() {p.Emit(p.GetState())}()
+			go func() {
+				state := p.GetState()
+				p.gauge.Set(state.Ph)
+				p.Emit(state)
+			}()
 		}
 	}
 }
 
-func (p *AtlasScientificPhProbe) Read() (float32, error) {
+func (p *AtlasScientificPhProbe) Read() (float64, error) {
 	bytesRead := 0
 	_, err := p.readFile.Seek(0, 0)
 
@@ -179,10 +192,10 @@ func (p *AtlasScientificPhProbe) Read() (float32, error) {
 
 			p.sampleLock.Lock()
 			defer p.sampleLock.Unlock()
-			p.samples.Value = float32(val)
+			p.samples.Value = float64(val)
 			p.samples = p.samples.Next()
 		}
-		return float32(val), err
+		return float64(val), err
 	}
 
 	return 0, err

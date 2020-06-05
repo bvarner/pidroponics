@@ -3,6 +3,8 @@ package pidroponics
 import (
 	"container/ring"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"io"
 	"io/ioutil"
 	"log"
@@ -18,6 +20,7 @@ import (
 type NTC100KThermistor struct {
 	Emitter		`json:"-"`
 	Name 		string
+	gauge		prometheus.Gauge
 	Initialized bool
 
 	readPath	string
@@ -38,7 +41,7 @@ type ThermistorState struct {
 }
 
 func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error) {
-	thermistorNames := []string{"sump_temp", "inlet_temp", "ambient_temp"}
+	thermistorNames := []string{"sump", "inlet", "ambient"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/ntc-thermistor")
 	if err != nil {
@@ -70,6 +73,12 @@ func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error)
 
 			t := NTC100KThermistor{
 				Name:			thermistorNames[thermNum],
+				gauge:			promauto.NewGauge(prometheus.GaugeOpts{
+					Namespace:   "pidroponics",
+					Subsystem:   thermistorNames[thermNum],
+					Name:        "temp_celsius",
+					Help:        "Temperature of the location in celsius",
+				}),
 				Initialized: 	false,
 				readPath:		readPath,
 				readBuf:	 	make([]byte, 4096),
@@ -185,7 +194,11 @@ func (t *NTC100KThermistor) tickerRead() {
 func (t *NTC100KThermistor) emitLoop() {
 	for range t.emitTic.C {
 		if t.Initialized {
-			go func() {t.Emit(t.GetState())}()
+			go func() {
+				state := t.GetState()
+				t.gauge.Set(state.Temperature)
+				t.Emit(state)
+			}()
 		}
 	}
 }

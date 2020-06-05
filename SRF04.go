@@ -3,6 +3,8 @@ package pidroponics
 import (
 	"container/ring"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"io"
 	"io/ioutil"
 	"log"
@@ -17,6 +19,7 @@ import (
 type Srf04 struct {
 	Emitter		`json:"-"`
 	Name		string
+	gauge		prometheus.Gauge
 	Initialized bool
 
 	devDevice	string
@@ -32,14 +35,14 @@ type Srf04 struct {
 
 type Srf04State struct {
 	Device		string
-	Distance	float32
+	Distance	float64
 	Timestamp	int64
 	sampleCount	int
 	sum			int
 }
 
 func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
-	transponderNames := []string{"sump_water_level", "inlet_water_level", "outlet_water_level"}
+	transponderNames := []string{"sump", "inlet", "outlet"}
 
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/srf04-gpio")
 	if err != nil {
@@ -72,6 +75,12 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 			s := Srf04{
 				devDevice:   devPath,
 				Name:        transponderNames[proximityNum],
+				gauge:		 promauto.NewGauge(prometheus.GaugeOpts{
+					Namespace:   "pidroponics",
+					Subsystem:   transponderNames[proximityNum],
+					Name:        "waterline_distance_meters",
+					Help:        "Distance to the waterline in meters",
+				}),
 				Initialized: false,
 				samples:     ring.New(30),
 				readTic:     readtic,
@@ -169,7 +178,7 @@ func (s *Srf04) GetState() *Srf04State {
 
 	// Do the division
 	if state.sampleCount > 0 {
-		state.Distance = float32(state.sum) / float32(state.sampleCount)
+		state.Distance = float64(state.sum) / float64(state.sampleCount) / 1000.0 // Convert to meters.
 	}
 
 	// TODO: Standard Deviation
