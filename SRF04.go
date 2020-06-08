@@ -205,7 +205,9 @@ func (s *Srf04) tickerRead(tickoffset int) {
 func (s *Srf04) emitLoop() {
 	for range s.emitTic.C {
 		if s.Initialized {
-			go func() {s.Emit(s.GetState())}()
+			state := s.GetState()
+			s.gauge.Set(state.Distance)
+			s.Emit(state)
 		}
 	}
 }
