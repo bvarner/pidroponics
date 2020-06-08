@@ -178,7 +178,7 @@ func (s *Srf04) GetState() *Srf04State {
 
 	// Do the division
 	if state.sampleCount > 0 {
-		state.Distance = float64(state.sum) / float64(state.sampleCount) / 1000.0 // Convert to meters.
+		state.Distance = float64(state.sum) / float64(state.sampleCount) / float64(1000.0) // Convert to meters.
 	}
 
 	// TODO: Standard Deviation
