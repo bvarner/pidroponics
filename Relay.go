@@ -14,7 +14,6 @@ import (
 
 type Relay struct {
 	Emitter `json:"-"`
-	gauge	*prometheus.GaugeVec
 	Device  string
 	IsOn    bool
 	toggled  time.Time
@@ -30,6 +29,13 @@ type RelayState struct {
 	Manual		bool
 	Timestamp	int64
 }
+
+var relayGauge *prometheus.GaugeVec = promauto.NewGaugeVec(prometheus.GaugeOpts{
+	Namespace:   "pidroponics",
+	Subsystem:   "",
+	Name:        "relay_value",
+	Help:        "State of a Relay. 0 = off, 1 = on",
+}, []string{"device"})
 
 func DetectRelays() ([]Relay, error) {
 	basedir := "/sys/bus/platform/drivers/leds-gpio/leds/leds"
@@ -50,13 +56,7 @@ func DetectRelays() ([]Relay, error) {
 			}
 
 			var r = Relay{
-				devDevice: path.Join(basedir, file.Name()),
-				gauge: promauto.NewGaugeVec(prometheus.GaugeOpts{
-					Namespace:   "pidroponics",
-					Subsystem:   "",
-					Name:        "relay_value",
-					Help:        "State of a Relay. 0 = off, 1 = on",
-				}, []string{"device"}),
+				devDevice:   path.Join(basedir, file.Name()),
 				Device:      relayNames[relayNum],
 				initialized: false,
 				Manual:      false,
@@ -91,9 +91,9 @@ func (r *Relay) readState() error {
 	r.IsOn = brightness > 0
 	r.toggled = time.Now()
 	if r.IsOn {
-		r.gauge.WithLabelValues(r.Device).Set(1)
+		relayGauge.WithLabelValues(r.Device).Set(1)
 	} else {
-		r.gauge.WithLabelValues(r.Device).Set(0)
+		relayGauge.WithLabelValues(r.Device).Set(0)
 	}
 	r.initialized = true
 
@@ -133,9 +133,9 @@ func (r *Relay) SetOn(state bool) error {
 
 		if err == nil {
 			if r.IsOn {
-				r.gauge.WithLabelValues(r.Device).Set(1)
+				relayGauge.WithLabelValues(r.Device).Set(1)
 			} else {
-				r.gauge.WithLabelValues(r.Device).Set(0)
+				relayGauge.WithLabelValues(r.Device).Set(0)
 			}
 			r.Emit(r.GetState())
 		}

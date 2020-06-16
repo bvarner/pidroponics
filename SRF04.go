@@ -16,10 +16,16 @@ import (
 	"time"
 )
 
+var srf04Gauge *prometheus.GaugeVec = promauto.NewGaugeVec(prometheus.GaugeOpts{
+	Namespace:   "pidroponics",
+	Subsystem:   "",
+	Name:        "distance_meters",
+	Help:        "Waterline distance in meters",
+}, []string{"sample_point"})
+
 type Srf04 struct {
 	Emitter		`json:"-"`
 	Name		string
-	gauge		*prometheus.GaugeVec
 	Initialized bool
 
 	SamplePoint	SamplePoint
@@ -75,12 +81,6 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 				devDevice:   devPath,
 				SamplePoint: GetSamplePoint(proximityNum),
 				Name:		 GetSamplePoint(proximityNum).String(),
-				gauge:       promauto.NewGaugeVec(prometheus.GaugeOpts{
-					Namespace:   "pidroponics",
-					Subsystem:   "",
-					Name:        "distance_meters",
-					Help:        "Waterline distance in meters",
-				}, []string{"sample_point"}),
 				Initialized: false,
 				samples:     ring.New(30),
 				readTic:     readtic,
@@ -206,7 +206,7 @@ func (s *Srf04) emitLoop() {
 	for range s.emitTic.C {
 		if s.Initialized {
 			state := s.GetState()
-			s.gauge.WithLabelValues(s.Name).Set(state.Distance)
+			srf04Gauge.WithLabelValues(s.Name).Set(state.Distance)
 			s.Emit(state)
 		}
 	}

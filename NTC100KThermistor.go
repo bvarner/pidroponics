@@ -20,7 +20,6 @@ import (
 type NTC100KThermistor struct {
 	Emitter		`json:"-"`
 	Name 		string
-	gauge		*prometheus.GaugeVec
 	Initialized bool
 
 	SamplePoint	SamplePoint
@@ -40,6 +39,14 @@ type ThermistorState struct {
 	sampleCount	int
 	sum			float64
 }
+
+var ntcGauge *prometheus.GaugeVec = promauto.NewGaugeVec(prometheus.GaugeOpts{
+	Namespace:   "pidroponics",
+	Subsystem:   "",
+	Name:        "temp_celsius",
+	Help:        "Temperature in celsius",
+}, []string{"sample_point"})
+
 
 func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error) {
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/ntc-thermistor")
@@ -72,12 +79,6 @@ func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error)
 
 			t := NTC100KThermistor{
 				SamplePoint:    GetSamplePoint(thermNum),
-				gauge:			promauto.NewGaugeVec(prometheus.GaugeOpts{
-					Namespace:   "pidroponics",
-					Subsystem:   "",
-					Name:        "temp_celsius",
-					Help:        "Temperature in celsius",
-				}, []string{"sample_point"}),
 				Initialized: 	false,
 				readPath:		readPath,
 				readBuf:	 	make([]byte, 4096),
@@ -203,7 +204,7 @@ func (t *NTC100KThermistor) emitLoop() {
 		if t.Initialized {
 			go func() {
 				state := t.GetState()
-				t.gauge.WithLabelValues(t.Name).Set(state.Temperature)
+				ntcGauge.WithLabelValues(t.Name).Set(state.Temperature)
 				t.Emit(state)
 			}()
 		}
