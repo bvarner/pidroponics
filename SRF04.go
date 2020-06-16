@@ -19,9 +19,10 @@ import (
 type Srf04 struct {
 	Emitter		`json:"-"`
 	Name		string
-	gauge		prometheus.Gauge
+	gauge		*prometheus.GaugeVec
 	Initialized bool
 
+	SamplePoint	SamplePoint
 	devDevice	string
 	readPath    string
 	readBuf		[]byte
@@ -42,8 +43,6 @@ type Srf04State struct {
 }
 
 func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
-	transponderNames := []string{"sump", "inlet", "outlet"}
-
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/srf04-gpio")
 	if err != nil {
 		return nil, err
@@ -74,13 +73,13 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 			// Construct the object the right way.
 			s := Srf04{
 				devDevice:   devPath,
-				Name:        transponderNames[proximityNum],
-				gauge:		 promauto.NewGauge(prometheus.GaugeOpts{
+				SamplePoint: GetSamplePoint(proximityNum),
+				Name:		 GetSamplePoint(proximityNum).String(),
+				gauge:       promauto.NewGaugeVec(prometheus.GaugeOpts{
 					Namespace:   "pidroponics",
-					Subsystem:   transponderNames[proximityNum],
-					Name:        "waterline_distance_meters",
-					Help:        "Distance to the waterline in meters",
-				}),
+					Name:        "distance_meters",
+					Help:        "Waterline distance in meters",
+				}, []string{"sample_point"}),
 				Initialized: false,
 				samples:     ring.New(30),
 				readTic:     readtic,
@@ -206,7 +205,7 @@ func (s *Srf04) emitLoop() {
 	for range s.emitTic.C {
 		if s.Initialized {
 			state := s.GetState()
-			s.gauge.Set(state.Distance)
+			s.gauge.WithLabelValues(s.Name).Set(state.Distance)
 			s.Emit(state)
 		}
 	}

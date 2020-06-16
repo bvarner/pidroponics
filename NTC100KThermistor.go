@@ -20,9 +20,10 @@ import (
 type NTC100KThermistor struct {
 	Emitter		`json:"-"`
 	Name 		string
-	gauge		prometheus.Gauge
+	gauge		*prometheus.GaugeVec
 	Initialized bool
 
+	SamplePoint	SamplePoint
 	readPath	string
 	readBuf		[]byte
 	readFile	*os.File
@@ -41,8 +42,6 @@ type ThermistorState struct {
 }
 
 func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error) {
-	thermistorNames := []string{"sump", "inlet", "ambient"}
-
 	files, err := ioutil.ReadDir("/sys/bus/platform/drivers/ntc-thermistor")
 	if err != nil {
 		return nil, err
@@ -72,13 +71,12 @@ func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error)
 			}
 
 			t := NTC100KThermistor{
-				Name:			thermistorNames[thermNum],
-				gauge:			promauto.NewGauge(prometheus.GaugeOpts{
+				SamplePoint:    GetSamplePoint(thermNum),
+				gauge:			promauto.NewGaugeVec(prometheus.GaugeOpts{
 					Namespace:   "pidroponics",
-					Subsystem:   thermistorNames[thermNum],
 					Name:        "temp_celsius",
-					Help:        "Temperature of the location in celsius",
-				}),
+					Help:        "Temperature in celsius",
+				}, []string{"sample_point"}),
 				Initialized: 	false,
 				readPath:		readPath,
 				readBuf:	 	make([]byte, 4096),
@@ -87,6 +85,7 @@ func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error)
 				samples:		ring.New(10),
 				emitTic: 		time.NewTicker(time.Second),
 			}
+			t.Name = t.getSamplePointString()
 			t.EmitterID = &t
 
 			// Initialize samples to NaN, a float64.
@@ -191,12 +190,19 @@ func (t *NTC100KThermistor) tickerRead() {
 	}
 }
 
+func (t *NTC100KThermistor) getSamplePointString() string {
+	if t.SamplePoint == 0 {
+		return "Air"
+	}
+	return t.SamplePoint.String()
+}
+
 func (t *NTC100KThermistor) emitLoop() {
 	for range t.emitTic.C {
 		if t.Initialized {
 			go func() {
 				state := t.GetState()
-				t.gauge.Set(state.Temperature)
+				t.gauge.WithLabelValues(t.Name).Set(state.Temperature)
 				t.Emit(state)
 			}()
 		}

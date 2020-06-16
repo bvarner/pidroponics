@@ -14,7 +14,7 @@ import (
 
 type Relay struct {
 	Emitter `json:"-"`
-	gauge	prometheus.Gauge
+	gauge	*prometheus.GaugeVec
 	Device  string
 	IsOn    bool
 	toggled  time.Time
@@ -51,12 +51,11 @@ func DetectRelays() ([]Relay, error) {
 
 			var r = Relay{
 				devDevice: path.Join(basedir, file.Name()),
-				gauge: promauto.NewGauge(prometheus.GaugeOpts{
+				gauge: promauto.NewGaugeVec(prometheus.GaugeOpts{
 					Namespace:   "pidroponics",
-					Subsystem:   "relay",
-					Name:        relayNames[relayNum] + "_value",
+					Name:        "relay_value",
 					Help:        "State of a Relay. 0 = off, 1 = on",
-				}),
+				}, []string{"device"}),
 				Device:      relayNames[relayNum],
 				initialized: false,
 				Manual:      false,
@@ -91,9 +90,9 @@ func (r *Relay) readState() error {
 	r.IsOn = brightness > 0
 	r.toggled = time.Now()
 	if r.IsOn {
-		r.gauge.Set(1)
+		r.gauge.WithLabelValues(r.Device).Set(1)
 	} else {
-		r.gauge.Set(0)
+		r.gauge.WithLabelValues(r.Device).Set(0)
 	}
 	r.initialized = true
 
@@ -133,9 +132,9 @@ func (r *Relay) SetOn(state bool) error {
 
 		if err == nil {
 			if r.IsOn {
-				r.gauge.Set(1)
+				r.gauge.WithLabelValues(r.Device).Set(1)
 			} else {
-				r.gauge.Set(0)
+				r.gauge.WithLabelValues(r.Device).Set(0)
 			}
 			r.Emit(r.GetState())
 		}
