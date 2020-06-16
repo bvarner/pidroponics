@@ -74,6 +74,7 @@ func DetectNTC100KThermistors(readtic *time.Ticker) ([]NTC100KThermistor, error)
 				SamplePoint:    GetSamplePoint(thermNum),
 				gauge:			promauto.NewGaugeVec(prometheus.GaugeOpts{
 					Namespace:   "pidroponics",
+					Subsystem:   "",
 					Name:        "temp_celsius",
 					Help:        "Temperature in celsius",
 				}, []string{"sample_point"}),

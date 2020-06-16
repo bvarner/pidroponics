@@ -42,6 +42,7 @@ func NewAtlasScientificPhProbe(readPath string, readTic *time.Ticker) (AtlasScie
 		Initialized: false,
 		gauge: promauto.NewGauge(prometheus.GaugeOpts{
 			Namespace:   "pidroponics",
+			Subsystem:   "",
 			Name:        "pH",
 			Help:        "Water pH",
 		}),

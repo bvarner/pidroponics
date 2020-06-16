@@ -77,6 +77,7 @@ func DetectSrf04(readtic *time.Ticker) ([]Srf04, error) {
 				Name:		 GetSamplePoint(proximityNum).String(),
 				gauge:       promauto.NewGaugeVec(prometheus.GaugeOpts{
 					Namespace:   "pidroponics",
+					Subsystem:   "",
 					Name:        "distance_meters",
 					Help:        "Waterline distance in meters",
 				}, []string{"sample_point"}),

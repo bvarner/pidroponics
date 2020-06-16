@@ -53,6 +53,7 @@ func DetectRelays() ([]Relay, error) {
 				devDevice: path.Join(basedir, file.Name()),
 				gauge: promauto.NewGaugeVec(prometheus.GaugeOpts{
 					Namespace:   "pidroponics",
+					Subsystem:   "",
 					Name:        "relay_value",
 					Help:        "State of a Relay. 0 = off, 1 = on",
 				}, []string{"device"}),
