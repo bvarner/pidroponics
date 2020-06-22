@@ -188,7 +188,8 @@ func (p *AtlasScientificPhProbe) Read() (float64, error) {
 	if bytesRead > 0 { // paranoia
 		val, err := strconv.ParseFloat(string(p.readBuf[:bytesRead-1]), 32)
 		if err == nil {
-			val = (-5.6548 * val) + 15.509 // Per the Atlas Scientific conversion data.
+			// val is in millivolts, so we need to convert to volts and then...
+			val = (-5.6548 * (val / 1000)) + 15.509 // Apply the base equation per the Atlas Scientific conversion data.
 
 			p.sampleLock.Lock()
 			defer p.sampleLock.Unlock()
